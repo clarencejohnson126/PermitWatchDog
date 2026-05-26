@@ -11,51 +11,62 @@ export class MannheimBekanntmachungenScraper extends BaseScraper {
 
   async run(): Promise<ScrapedRecord[]> {
     const records: ScrapedRecord[] = [];
-
     console.log('[Mannheim] Starting scrape run');
-    
-    // Target 1: Bekanntmachungen (HTML)
-    const bekanntmachungenUrl = 'https://www.mannheim.de/de/wirtschaft-entwickeln/oeffentliche-bekanntmachungen-aktuelle-planverfahren-vergaben';
+
+    // TARGET 1: Bekanntmachungen (Static HTML)
+    const bekanntUrl = 'https://www.mannheim.de/de/wirtschaft-entwickeln/oeffentliche-bekanntmachungen-aktuelle-planverfahren-vergaben';
     try {
-      const html = await this.http.getHtml(bekanntmachungenUrl);
+      const html = await this.http.getHtml(bekanntUrl);
       const $ = this.parseHtml(html);
       
-      // In a real implementation, we would use proper selectors here.
-      // For the scaffold, we just log that we parsed it.
-      const pageTitle = $('title').text();
-      console.log(`[Mannheim] Fetched Bekanntmachungen, page title: ${pageTitle}`);
-      
-      records.push({
-        source_url: bekanntmachungenUrl,
-        publish_date: new Date(),
-        gemeinde: this.gemeindeName,
-        title: 'Mock Bekanntmachung Title',
-        content_text: 'Mock content from HTML parser'
+      const rows = $('.views-row');
+      console.log(`[Mannheim] Found ${rows.length} views-row entries on Bekanntmachungen page`);
+
+      rows.each((i, el) => {
+        const title = $(el).find('.field-content').text().trim() || 'Untitled Bekanntmachung';
+        // HTML scraping without fetching individual pages for now
+        records.push({
+          source_url: bekanntUrl + `#row-${i}`,
+          publish_date: new Date(), // Mock date since parsing exact text depends on DOM shape
+          gemeinde: this.gemeindeName,
+          title: title,
+          content_text: `Extracted from views-row ${i}`
+        });
       });
     } catch (e) {
       console.error('[Mannheim] Error scraping Bekanntmachungen HTML', e);
     }
 
-    // Target 2: Amtsblatt (PDFs)
-    // Warning: The live URL amtsblatt-2026 is currently a placeholder
-    const amtsblattUrl = 'https://www.mannheim.de/de/amtsblatt-der-stadt-mannheim/amtsblatt-2026';
-    try {
-      const html = await this.http.getHtml(amtsblattUrl);
-      const $ = this.parseHtml(html);
-      
-      // We would find PDF links. For now, we mock it.
-      console.log(`[Mannheim] Fetched Amtsblatt 2026 index page.`);
-      
-      // Mock PDF parsing
-      records.push({
-        source_url: amtsblattUrl + '/mock-pdf.pdf',
-        publish_date: new Date(),
-        gemeinde: this.gemeindeName,
-        title: 'Amtsblatt Ausgabe 1',
-        content_text: 'Mock extracted text from PDF'
-      });
-    } catch (e) {
-      console.error('[Mannheim] Error scraping Amtsblatt PDFs', e);
+    // TARGET 2: Amtsblatt 2026 and 2025 Archives
+    const archiveUrls = [
+      'https://www.mannheim.de/de/amtsblatt-der-stadt-mannheim/amtsblatt-2026',
+      'https://www.mannheim.de/de/amtsblatt-der-stadt-mannheim/amtsblatt-2025'
+    ];
+
+    for (const url of archiveUrls) {
+      try {
+        const html = await this.http.getHtml(url);
+        const $ = this.parseHtml(html);
+        
+        // Find links matching the weekly pattern
+        const pdfLinks = $('a').map((i, el) => $(el).attr('href')).get()
+          .filter(href => href && href.toLowerCase().endsWith('.pdf') && href.includes('KW'));
+        
+        console.log(`[Mannheim] Found ${pdfLinks.length} Amtsblatt PDFs in archive: ${url}`);
+        
+        for (const href of pdfLinks) {
+          const fullUrl = href.startsWith('http') ? href : `https://www.mannheim.de${href}`;
+          records.push({
+            source_url: fullUrl,
+            publish_date: new Date(), // Mock date
+            gemeinde: this.gemeindeName,
+            title: href.split('/').pop() || 'Amtsblatt PDF',
+            content_text: `Mock parsed PDF text from ${fullUrl}`
+          });
+        }
+      } catch (e) {
+        console.error(`[Mannheim] Error scraping Amtsblatt at ${url}`, e);
+      }
     }
 
     return records;
