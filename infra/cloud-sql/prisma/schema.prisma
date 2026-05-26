@@ -20,3 +20,12 @@ model Filing {
   source_type        String
   created_at         DateTime  @default(now())
 }
+
+model ScraperRun {
+  id                     String   @id @default(uuid())
+  started_at             DateTime
+  completed_at           DateTime
+  total_filings_ingested Int
+  errors_count           Int
+  source_breakdown       Json
+}
