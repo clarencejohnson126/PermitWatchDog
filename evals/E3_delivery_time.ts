@@ -1,8 +1,14 @@
-// TODO(v0.2): once Outlook Graph API delivery is wired, change
-//             completion measurement from "scrape_complete" to
-//             "all drafts queued in Outlook drafts folder"
+// E3 — delivery-time SLA.
+// Measures elapsed scrape time as a proxy for the 3-hour
+// 03:00→06:00 cron window. Evaluable at any time of day —
+// not clock-dependent.
+// TODO(v0.2): extend completion measurement to include the
+//             Outlook Graph draft-queued timestamp once that
+//             stage of the pipeline is wired.
 
 import { PrismaClient } from '@prisma/client';
+
+const SLA_SECONDS = 3 * 3600;  // 3-hour 03:00→06:00 budget
 
 async function runE3() {
   const prisma = new PrismaClient();
@@ -18,38 +24,23 @@ async function runE3() {
     }
 
     const elapsedMs = lastRun.completed_at.getTime() - lastRun.started_at.getTime();
-    const elapsedSeconds = (elapsedMs / 1000).toFixed(2);
+    const elapsedSeconds = elapsedMs / 1000;
     
-    // "would have delivered by" is effectively the completed_at time for now
-    const deliveryTime = new Date(lastRun.started_at.getTime() + elapsedMs);
-    
-    // Format to Europe/Berlin timezone
-    const berlinTimeStr = deliveryTime.toLocaleTimeString('en-GB', {
-      timeZone: 'Europe/Berlin',
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-
     console.log(`\n--- E3: Delivery Time ---`);
     console.log(`Latest Run ID: ${lastRun.id}`);
     console.log(`Started At:    ${lastRun.started_at.toISOString()}`);
     console.log(`Completed At:  ${lastRun.completed_at.toISOString()}`);
-    console.log(`Elapsed Time:  ${elapsedSeconds} seconds`);
+    console.log(`Elapsed Time:  ${elapsedSeconds.toFixed(2)} seconds`);
     console.log(`Filings:       ${lastRun.total_filings_ingested}`);
     console.log(`Errors:        ${lastRun.errors_count}`);
-    console.log(`\nWould Deliver By (Berlin TZ): ${berlinTimeStr}`);
+    console.log(`SLA Budget:    ${SLA_SECONDS} seconds`);
 
-    // Parse the Berlin time string "HH:MM:SS"
-    const [hour, minute] = berlinTimeStr.split(':').map(Number);
-
-    // Pass criterion: < 06:00 local time
-    if (hour < 6) {
-      console.log(`\n✅ RESULT: PASS (Delivery before 06:00 Berlin time)`);
+    // Pass criterion: < 3 hours elapsed time
+    if (elapsedSeconds < SLA_SECONDS) {
+      console.log(`\n✅ RESULT: PASS (Scrape completed within ${SLA_SECONDS} seconds budget)`);
       process.exit(0);
     } else {
-      console.log(`\n❌ RESULT: FAIL (Delivery at or after 06:00 Berlin time)`);
+      console.log(`\n❌ RESULT: FAIL (Scrape exceeded ${SLA_SECONDS} seconds budget)`);
       process.exit(1);
     }
   } catch (error) {
