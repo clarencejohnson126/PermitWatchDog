@@ -92,19 +92,19 @@ PermitWatchDog/
 │   ├── shared-types/            JSON schemas: project profile, filing, alert
 │   └── doctrine/                DACH legal-reasoning helpers (Bestandsschutz logic)
 ├── evals/
-│   ├── E1_scraper_completeness.py
-│   ├── E2_relevance.py
-│   ├── E3_delivery_time.py
-│   ├── E4_draft_quality.py
-│   ├── E4b_calibration.py
-│   ├── E5a_high_precision.py
-│   ├── E5b_bestandsschutz_suppression.py
-│   ├── E6_cost.py
-│   ├── E7_egress_audit.py
-│   ├── E8_golden_set.py
-│   ├── E9_revenue.py
-│   ├── E10_ai_native_ops.py
-│   ├── E11_webmcp_conformance.py
+│   ├── E1_scraper_completeness.ts
+│   ├── E2_relevance.ts
+│   ├── E3_delivery_time.ts
+│   ├── E4_draft_quality.ts
+│   ├── E4b_calibration.ts
+│   ├── E5a_high_precision.ts
+│   ├── E5b_bestandsschutz_suppression.ts
+│   ├── E6_cost.ts
+│   ├── E7_egress_audit.ts
+│   ├── E8_golden_set.ts
+│   ├── E9_revenue.ts
+│   ├── E10_ai_native_ops.ts
+│   ├── E11_webmcp_conformance.ts
 │   ├── golden_set/              125 frozen test cases (25 filings × 5 projects × 5 lifecycle stages)
 │   └── ground_truth/            daily-labelled filings (Clarence-maintained)
 ├── infra/

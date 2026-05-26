@@ -1,0 +1,11 @@
+[
+  {
+    "_comment": "Bekanntmachungen/Vergaben do not expose historical entries on the DOM. This fixture only expects the single Amtsblatt PDF for 2025 KW 30."
+  },
+  {
+    "title": "Amtsblatt KW 30",
+    "source_url": "https://www.mannheim.de/sites/default/files/2025-07/KW%2030_250724.pdf",
+    "publish_date": "2025-07-24T00:00:00.000Z",
+    "source_type": "amtsblatt_pdf"
+  }
+]
