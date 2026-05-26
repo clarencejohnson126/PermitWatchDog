@@ -1,0 +1,17 @@
+{
+  "name": "@permitwatchdog/doctrine",
+  "version": "0.1.0",
+  "main": "dist/engine.js",
+  "types": "dist/engine.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Tests run via E8 root eval\""
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

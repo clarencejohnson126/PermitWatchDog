@@ -1,0 +1,154 @@
+[
+  {
+    "description": "Bebauungsplan-Änderung Q5/Q6 zur GRZ-Erhöhung",
+    "input": {
+      "filing": {
+        "title": "Bebauungsplan-Änderung Q5/Q6 zur GRZ-Erhöhung",
+        "content_text": "Der Bebauungsplan für Q5/Q6 wird hinsichtlich der Grundflächenzahl angepasst...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz-Nachweis", "Auflage 12: PV-Anlage Solarpflicht", "Auflage 17: Brandschutz-DIN"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "NO_IMPACT_BESTANDSSCHUTZ",
+      "applicable_doctrine_layer": "BESTANDSSCHUTZ"
+    }
+  },
+  {
+    "description": "Lärmschutz-DIN-Update (Auflage 04 betroffen)",
+    "input": {
+      "filing": {
+        "title": "Neue Lärmschutz-Vorgaben DIN 4109",
+        "content_text": "Die DIN 4109 zum baulichen Schallschutz wurde aktualisiert. Neue Grenzwerte...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz-Nachweis nach DIN 4109", "Auflage 12: PV-Anlage Solarpflicht", "Auflage 17: Brandschutz-DIN"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "HIGH",
+      "pierced_by": "AUFLAGE"
+    }
+  },
+  {
+    "description": "Solarpflicht-Schwellenwert-Änderung",
+    "input": {
+      "filing": {
+        "title": "Änderung der Solarpflicht-Verordnung",
+        "content_text": "Die Solarpflicht-Verordnung BW wurde angepasst, ab sofort gelten neue Vorgaben...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz-Nachweis", "Auflage 12: PV-Anlage gemäß Solarpflicht", "Auflage 17: Brandschutz-DIN"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "MEDIUM",
+      "pierced_by": "AUFLAGE"
+    }
+  },
+  {
+    "description": "Brandschutz-DIN-4102-Update (Auflage 17)",
+    "input": {
+      "filing": {
+        "title": "Neufassung der Brandschutz-DIN 4102",
+        "content_text": "Die Brandschutzvorgaben der DIN 4102 für Gebäudeklasse 4 wurden verschärft...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz-Nachweis", "Auflage 12: PV-Anlage Solarpflicht", "Auflage 17: Nachweis F90 Brandschutz DIN 4102"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "HIGH",
+      "pierced_by": "AUFLAGE"
+    }
+  },
+  {
+    "description": "Nachbar-Bauantrag Q5,19 (Aufstockung)",
+    "input": {
+      "filing": {
+        "title": "Bauantrag eingereicht: Aufstockung Q5, 19",
+        "content_text": "Für das Flurstück Q5, 19 wurde ein Bauantrag auf zweigeschossige Aufstockung eingereicht...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz", "Auflage 12: PV-Anlage", "Auflage 17: Brandschutz"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "MEDIUM",
+      "pierced_by": "NEIGHBOR_AUSLEGUNG"
+    }
+  },
+  {
+    "description": "Bebauungsplan-Neuaufstellung Q1–Q4",
+    "input": {
+      "filing": {
+        "title": "Bebauungsplan-Neuaufstellung Q1-Q4",
+        "content_text": "Der Gemeinderat hat die Neuaufstellung des Bebauungsplans für die Quadrate Q1 bis Q4 beschlossen...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz", "Auflage 12: PV-Anlage", "Auflage 17: Brandschutz"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "NO_IMPACT_OTHER",
+      "applicable_doctrine_layer": "NONE"
+    }
+  },
+  {
+    "description": "Mannheim-Stellplatzsatzung-Änderung",
+    "input": {
+      "filing": {
+        "title": "Änderung Stellplatzsatzung Mannheim",
+        "content_text": "Die Stellplatzsatzung der Stadt Mannheim wird angepasst, Fahrrad-Stellplätze...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz", "Auflage 12: Stellplatzsatzung", "Auflage 17: Brandschutz"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "MEDIUM",
+      "pierced_by": "AUFLAGE"
+    }
+  },
+  {
+    "description": "Allgemeine LBO-BW-Novelle Brandschutz GK4",
+    "input": {
+      "filing": {
+        "title": "LBO-BW Novelle Brandschutz GK4",
+        "content_text": "Der Landtag Baden-Württemberg hat die Änderung der LBO bezüglich Brandschutz für Gebäudeklasse 4 beschlossen...",
+        "source_type": "bekanntmachung"
+      },
+      "project": {
+        "lifecycle_stage": "im Bau",
+        "bescheid_auflagen": ["Auflage 04: Lärmschutz", "Auflage 12: PV-Anlage", "Auflage 17: Brandschutz GK4"],
+        "abstandsflaeche_nachbarn": ["Q5, 17", "Q5, 19"]
+      }
+    },
+    "expected": {
+      "verdict": "HIGH",
+      "pierced_by": "AUFLAGE"
+    }
+  }
+]
