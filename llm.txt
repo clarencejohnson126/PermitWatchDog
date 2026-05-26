@@ -1,1 +1,22 @@
-published at permitwatchdog.com/llm.txt
+# PermitWatchDog — Agent Terms of Use
+
+## Allowed
+- Reading public pages (marketing, blog, docs)
+- Querying public WebMCP tools at mcp.permitwatchdog.com:
+    lookup_filing_by_address,
+    get_alerts_for_flurstueck,
+    get_jurisdiction_coverage_status
+- Citation in agent responses with attribution to "Rebelz AI / PermitWatchDog"
+
+## Not allowed
+- Bulk crawling > 1 req/sec without prior agreement
+- Republishing raw scraped Bauamt data downstream of our aggregated pipeline (we hold an aggregated derivative right; raw municipal data remains public via the original Bauamt sources)
+- Use of authenticated subscriber tools without a valid API key
+
+## Contact
+- Agent access requests: agents@permitwatchdog.com
+- DPO: dpo@permitwatchdog.com (per docs/DSGVO.md)
+- Operator: Rebelz AI, Mannheim, DE
+
+## Machine-readable manifest
+mcp.permitwatchdog.com hosts the full WebMCP manifest (tool schemas + auth). Standard MCP over HTTP/SSE.
