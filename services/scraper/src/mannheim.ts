@@ -13,7 +13,7 @@ export class MannheimBekanntmachungenScraper extends BaseScraper {
   // --- C.1 Amtsblatt Date Parsing ---
   private parseAmtsblattFilename(href: string): { kw: string; publish_date: Date } {
     const filename = href.split('/').pop() || '';
-    const match = filename.match(/KW(?:%20|\s*)(\d+)_(\d{4,6})\.pdf/i);
+    const match = filename.match(/KW(?:%20|\s*)(\d+)_(\d{4,6})(?:_[^.]+)?\.pdf/i);
     if (!match) throw new Error(`Filename pattern mismatch: ${filename}`);
 
     const kw = match[1];
