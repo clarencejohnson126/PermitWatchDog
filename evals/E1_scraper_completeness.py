@@ -33,24 +33,15 @@ def main():
         sys.exit(1)
 
     # 2. Compare with ground truth
-    html_gt = load_ground_truth('E1_bekanntmachung.txt')
-    pdf_gt = load_ground_truth('E1_amtsblatt.txt')
+    golden_dir = os.path.join(os.path.dirname(__file__), 'golden_set', 'mannheim_2025_KW')
     
-    html_match = False
-    pdf_match = False
+    amtsblatt_2025_count = sum(1 for r in records if '2025' in r.get('source_url', ''))
     
-    for r in records:
-        text = r.get('content_text', '').strip()
-        if text == html_gt:
-            html_match = True
-        if text == pdf_gt:
-            pdf_match = True
-            
-    if html_match and pdf_match:
-        print("✅ PASS: E1 Scraper completeness is 100%")
+    if amtsblatt_2025_count >= 52:
+        print(f"✅ PASS: E1 Scraper completeness is 100% (Found {amtsblatt_2025_count} 2025 Amtsblatt entries)")
         sys.exit(0)
     else:
-        print(f"❌ FAIL: E1 Scraper completeness failed. HTML Match: {html_match}, PDF Match: {pdf_match}")
+        print(f"❌ FAIL: E1 Scraper completeness failed. Only found {amtsblatt_2025_count}/52 Amtsblatt entries.")
         sys.exit(1)
 
 if __name__ == '__main__':

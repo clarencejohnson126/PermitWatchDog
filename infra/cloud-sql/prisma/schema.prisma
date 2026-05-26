@@ -8,12 +8,15 @@ datasource db {
 }
 
 model Filing {
-  id               String   @id @default(uuid())
-  source_url       String   @unique
-  publish_date     DateTime
-  gemeinde         String
-  title            String
-  content_text     String
-  pdf_storage_path String?
-  created_at       DateTime @default(now())
+  id                 String    @id @default(uuid())
+  source_url         String    @unique
+  publish_date       DateTime
+  gemeinde           String
+  title              String
+  content_text       String
+  pdf_storage_path   String?
+  auslegung_end_date DateTime?
+  parse_confidence   String?
+  source_type        String
+  created_at         DateTime  @default(now())
 }

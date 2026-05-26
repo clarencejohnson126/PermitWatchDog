@@ -3,6 +3,7 @@ export declare class HttpClient {
     private userAgents;
     constructor();
     getHtml(url: string): Promise<string>;
-    getBuffer(url: string): Promise<Buffer>;
+    head(url: string): Promise<Record<string, string>>;
+    getBuffer(url: string, retries?: number): Promise<Buffer>;
     getHtmlWithPlaywright(url: string): Promise<string>;
 }

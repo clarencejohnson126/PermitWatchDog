@@ -10,6 +10,10 @@ export interface ScrapedRecord {
   gemeinde: string;
   title: string;
   content_text: string;
+  pdf_storage_path?: string;
+  auslegung_end_date?: Date | null;
+  parse_confidence?: 'high' | 'low' | 'failed' | null;
+  source_type: 'bekanntmachung' | 'vergabe' | 'amtsblatt_pdf' | 'bauleitplanung';
 }
 
 export abstract class BaseScraper {

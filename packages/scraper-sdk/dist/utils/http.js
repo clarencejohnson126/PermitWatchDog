@@ -36,12 +36,27 @@ class HttpClient {
             throw error;
         }
     }
-    async getBuffer(url) {
+    async head(url) {
+        try {
+            const response = await this.client.head(url);
+            return response.headers;
+        }
+        catch (error) {
+            console.error(`Failed to HEAD ${url}: ${error.message}`);
+            throw error;
+        }
+    }
+    async getBuffer(url, retries = 1) {
         try {
             const response = await this.client.get(url, { responseType: 'arraybuffer' });
             return Buffer.from(response.data, 'binary');
         }
         catch (error) {
+            if (retries > 0 && error.response && error.response.status >= 400) {
+                console.log(`[HTTP] Retrying GET ${url} due to ${error.response.status}...`);
+                await new Promise(r => setTimeout(r, 2000));
+                return this.getBuffer(url, retries - 1);
+            }
             console.error(`Failed to fetch Buffer from ${url}: ${error.message}`);
             throw error;
         }
