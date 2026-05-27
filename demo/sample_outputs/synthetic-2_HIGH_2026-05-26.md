@@ -6,19 +6,18 @@
 **Date:** 2026-05-26T00:00:00.000Z
 
 ## Doctrine Reasoning
-Auflage betroffen: The filing explicitly states that for projects concerning specific plots (Q5 or Q6) and still under construction, "F90 Nachweise" according to "DIN 4102" must be renewed ("erneuern"). This directly impacts "Auflage 17: Nachweis F90 Brandschutz DIN 4102", requiring an update or re-submission of this specific fire protection proof. Auflagen 04 and 12 are not referenced or affected by the filing. (Auflage 17: Nachweis F90 Brandschutz DIN 4102)
+Auflage betroffen: The filing explicitly states that "Vorhaben, bei denen die Flurstücke Q5 oder Q6 betroffen sind und die sich noch im Bau befinden, müssen gemäß DIN 4102 die F90 Nachweise erneuern." This directly references and updates the requirement for "Nachweis F90 Brandschutz DIN 4102" as specified in Auflage 17. (Auflage 17: Nachweis F90 Brandschutz DIN 4102)
 **System Doctrine Route:** AUFLAGE
 
 ## Drafted Addendum
 Sehr geehrte Damen und Herren,
 
-wir nehmen Bezug auf die Novellierung der Brandschutz-Vorgaben gemäß Landesbauordnung Baden-Württemberg (LBO BW) für die Gebäudeklasse 4, beschlossen durch den Landtag Baden-Württemberg.
+Bezugnehmend auf die erfolgte Novellierung der Brandschutz-Vorgaben der Landesbauordnung Baden-Württemberg (LBO BW) für die Gebäudeklasse 4 durch Beschluss des Landtags Baden-Württemberg, informieren wir Sie über die daraus resultierenden Anforderungen.
 
-Diese Anpassungen durchbrechen den Bestandsschutz für Bauvorhaben, die sich noch in der Ausführung befinden und die Flurstücke Q5 oder Q6 betreffen. Unser Bauvorhaben Wohnhaus Q5, 18 in Mannheim Innenstadt ist betroffen. Demzufolge ist die in der Baugenehmigung enthaltene Auflage 17: Nachweis F90 Brandschutz DIN 4102, gemäß den neuen Vorgaben zu erneuern.
+Diese Novellierung betrifft unmittelbar das Bauvorhaben Wohnhaus Q5, 18 — Mannheim Innenstadt. Gemäß der vorliegenden rechtlichen Einordnung wird der Bestandsschutz für dieses im Bau befindliche Flurstück Q5 durchbrochen. Die Auflage 17, welche den Nachweis F90 Brandschutz DIN 4102 fordert, wird hierbei explizit angepasst.
 
-Wir bitten Sie daher, die erforderlichen Anpassungen an der Planung umgehend vorzunehmen und den Nachweis F90 Brandschutz gemäß DIN 4102 zu aktualisieren und neu einzureichen. Die Einhaltung der bauordnungsrechtlichen Anforderungen ist sicherzustellen.
+Wir fordern Sie auf, die Planung des Bauvorhabens Wohnhaus Q5, 18 — Mannheim Innenstadt umgehend einer Prüfung zu unterziehen und die erforderliche Anpassung sowie Erneuerung der F90 Brandschutznachweise nach DIN 4102 zu veranlassen.
 
-Mit freundlichen Grüßen
-
+Mit freundlichen Grüßen,
 Clarence Johnson
 RebelzBau Mannheim GmbH
