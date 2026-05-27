@@ -167,9 +167,88 @@ export async function evaluateFiling(input: DoctrineInput): Promise<DoctrineOutp
     };
   }
 
-  // 6. FAIL-OPEN (Default to LOW/NO_IMPACT on ambiguity if not caught by pre-screen)
-  // Note: the prompt says the pre-screen drops most down to NO_IMPACT or LOW.
-  // The user states: "If most MEDIUMs were coming from the LLM fallback returning "ambiguous, MEDIUM," the pre-screen should drop most of them down to NO_IMPACT or LOW."
+  const geoKeywords = [project.gemeinde, project.gemarkung, 'Mannheim', 'Innenstadt', 'Q5', 'Q6'].filter(Boolean).join('|');
+  const preScreenKeywords = new RegExp(`(${geoKeywords}|Verkehr|Parkplatz|Baustelle|Müllabfuhr|Lärm|Stromversorgung|Erschließung|Beleuchtung|Wasserversorgung|Sperrung|Umleitung|Kindertageseinrichtung|Schallschutz|Wohnungsbau|Mehrfamilienhaus|Bauvorhaben|Bauantrag)`, 'i');
+  const preScreenExclusions = /(Gastronomie|Sicherheitsdienst|IT-Beschaffung|Software|Veranstaltungen|Konzert|Festival|Schule)/i;
+  
+  if (preScreenKeywords.test(filing.title) || preScreenKeywords.test(filing.content_text)) {
+    // Only apply exclusions to the TITLE. If we apply them to content_text, a single 'Schule' in a 50-page Amtsblatt suppresses the whole document.
+    if (!preScreenExclusions.test(filing.title)) {
+      console.log(`[Pre-screen] Passed for: ${filing.title}`);
+      let textSnippet = filing.content_text.substring(0, 1500);
+      const match = filing.content_text.match(preScreenKeywords);
+      if (match && match.index !== undefined) {
+        const start = Math.max(0, match.index - 300);
+        const end = Math.min(filing.content_text.length, match.index + 1200);
+        textSnippet = filing.content_text.substring(start, end);
+      }
+      
+      const prompt = `
+        Du bist ein erfahrener Bauleiter in Deutschland. Lies diese amtliche Bekanntmachung und bewerte, ob sie konkrete, operative Auswirkungen auf die Baustellenlogistik, Projektplanung oder Ausführung unseres Bauvorhabens hat.
+        Die Auswirkungen müssen real und nachvollziehbar sein (z.B. Straßensperrungen, neue Parküberwachung, Lärmschutz), keine weit hergeholten theoretischen Zusammenhänge.
+        Sei extrem konservativ: Wenn du nicht sicher bist, wähle affects=false.
+        
+        Projektinformationen:
+        Gemeinde: ${project.gemeinde || 'Mannheim'}
+        Adresse: ${project.address || 'Q5, 18'}
+        Typ: ${project.project_type || 'Wohnhaus'}
+        Status: ${project.lifecycle_stage}
+        Bekannte Auflagen: ${project.bescheid_auflagen.join(', ')}
+        
+        Bekanntmachungstitel: ${filing.title}
+        Text (Auszug): ${textSnippet}
+        
+        Antworte strikt in diesem JSON-Format:
+        {
+          "affects": boolean,
+          "reasoning_de": "string (maximal 50 Wörter)",
+          "impact_category": "baulogistik" | "verkehr" | "forward_pipeline" | "nachbarschaft" | "infrastruktur" | "sonstiges",
+          "confidence": number
+        }
+      `;
+
+      try {
+        const model = ai.getGenerativeModel({
+          model: 'gemini-2.5-flash',
+          generationConfig: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: SchemaType.OBJECT,
+              properties: {
+                affects: { type: SchemaType.BOOLEAN },
+                reasoning_de: { type: SchemaType.STRING },
+                impact_category: { type: SchemaType.STRING },
+                confidence: { type: SchemaType.NUMBER }
+              },
+              required: ["affects", "reasoning_de", "impact_category", "confidence"]
+            }
+          }
+        });
+        const response = await model.generateContent(prompt);
+        if (response.response.text()) {
+          const resText = response.response.text();
+          console.log(`[LLM Debug] ${filing.title}: ${resText}`);
+          const res = JSON.parse(resText);
+          if (res.affects) {
+             const v = res.confidence > 0.7 ? 'MEDIUM' : 'LOW';
+             return {
+                verdict: v,
+                reasoning: res.reasoning_de,
+                confidence: res.confidence,
+                pierced_by: null,
+                applicable_doctrine_layer: 'NONE',
+                requires_llm_draft: true
+             };
+          }
+        }
+      } catch (e: any) {
+        // Fail silently into NO_IMPACT_OTHER
+        console.error("LLM Rule 6 Error:", e.message);
+      }
+    }
+  }
+
+  // 7. FAIL-OPEN (Default to NO_IMPACT_OTHER on ambiguity if not caught by pre-screen)
   return {
     verdict: 'NO_IMPACT_OTHER',
     reasoning: 'Keine direkte Betroffenheit erkennbar.',

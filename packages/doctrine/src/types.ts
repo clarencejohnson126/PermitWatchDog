@@ -14,7 +14,12 @@ export type Filing = {
 };
 
 export type ProjectProfile = {
-  lifecycle_stage: LifecycleStage;
+  project_name?: string;
+  address?: string;
+  gemarkung?: string;
+  gemeinde?: string;
+  project_type?: string;
+  lifecycle_stage: LifecycleStage | string;
   bescheid_auflagen: string[];
   abstandsflaeche_nachbarn: string[];
 };
