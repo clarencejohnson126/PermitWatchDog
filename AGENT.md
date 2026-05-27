@@ -57,8 +57,8 @@ v0.1 ships in Mannheim by 2026-08-17 for the XPRIZE submission.
 | Subscriber auth | **Firebase Auth** (email-link, passwordless) | Lowest friction for German B2B |
 | Subscription billing | **Stripe Checkout + Customer Portal** | EU Reverse Charge + MwSt + GoBD-compliant exports |
 | Agent protocol | **WebMCP** — provider at `mcp.permitwatchdog.com`, consumer path stub-ready | I/O '26 early-adopter signal; judge-grade |
-| Frontend (portal) | **Next.js on Cloud Run** | Single-stack, DE-hosted |
-| Frontend (marketing) | **Static Next.js on Cloud Run** | Same stack, separate service |
+| Frontend (portal) | **Next.js on Cloud Run** | europe-west3 (DE data sovereignty for subscriber data) |
+| Frontend (marketing) | **Next.js on Vercel** | no DE-region constraint — no subscriber data processed at this layer |
 
 If you find yourself reaching for Vercel / AWS / OpenAI / non-Cloud-SQL Postgres / SvelteKit — stop and re-read this table. The stack is locked.
 
