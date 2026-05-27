@@ -92,7 +92,8 @@ ${draft}
       }
     } catch (e: any) {
       console.error(`ERROR processing filing ${filing.id || filing.title}: ${e.message}`);
-      process.exit(1);
+      // Drop the draft and continue to next filing
+      continue;
     }
   }
 
