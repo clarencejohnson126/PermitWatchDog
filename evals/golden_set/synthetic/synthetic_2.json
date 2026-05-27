@@ -1,0 +1,10 @@
+{
+  "source_url": "synthetic://mannheim/amtsblatt/brandschutz",
+  "publish_date": "2026-05-26T00:00:00.000Z",
+  "gemeinde": "Mannheim",
+  "title": "Novellierung Brandschutz-Vorgaben LBO BW für Gebäudeklasse 4",
+  "content_text": "Der Landtag Baden-Württemberg hat beschlossen, die LBO-Brandschutzvorgaben für die Gebäudeklasse 4 anzupassen. Vorhaben, bei denen die Flurstücke Q5 oder Q6 betroffen sind und die sich noch im Bau befinden, müssen gemäß DIN 4102 die F90 Nachweise erneuern.",
+  "source_type": "amtsblatt_pdf",
+  "parse_confidence": "HIGH",
+  "is_synthetic": true
+}
