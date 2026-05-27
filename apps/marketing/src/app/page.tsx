@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Mail, CheckCircle2, Search, ArrowRight, ShieldAlert, FileText, Lock, Clock } from "lucide-react";
 
 export default function Home() {
-  const stripeLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#";
+  const stripeLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_T0 || "#";
 
   return (
     <main className="flex-1 flex flex-col items-center overflow-x-hidden">
@@ -14,6 +14,8 @@ export default function Home() {
         </div>
         <Link 
           href={stripeLink}
+          target="_blank"
+          rel="noopener noreferrer"
           className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-zinc-700"
         >
           Anmelden
@@ -41,6 +43,8 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
           <Link
             href={stripeLink}
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2"
           >
             Bauvorhaben absichern
@@ -213,6 +217,8 @@ export default function Home() {
               </ul>
               <Link
                 href={stripeLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-semibold transition-colors"
               >
                 Jetzt abonnieren

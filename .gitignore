@@ -4,4 +4,6 @@ __pycache__/
 .DS_Store
 .antigravity/
 .env
+.env.local
+.env.*.local
 dist/
