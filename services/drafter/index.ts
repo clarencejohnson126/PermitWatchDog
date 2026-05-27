@@ -34,11 +34,46 @@ export async function draftAddendum(filing: any, project: any, doctrineOutput: a
     const response = await model.generateContent(prompt);
     const draftText = response.response.text();
 
-    // V0.2 Tier 2 Hack: E4b in-line quality gate stub
-    // Catch common syllable-dropping hallucinations
-    const typoGuard = /(Vosperrungen|Bausted|Baustellogistik|Logstik|Auslegug)/i;
-    if (typoGuard.test(draftText)) {
-      throw new Error('E4b-Guard: Detected hallucinated typo/syllable-drop in draft.');
+    const criticModel = ai.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const criticPrompt = `
+       You are a strict German-language editor reviewing AI-generated
+       text for a construction-industry product. Read the following
+       text and identify any token that is NOT a valid German word
+       or recognized abbreviation. IGNORE these as valid:
+         - Proper nouns: street names, company names (RebelzBau
+           Mannheim GmbH), people names (Clarence Johnson),
+           project names (Q5, 18, Wohnhaus Q5,18)
+         - Standard abbreviations: VOB/B, DIN, BGB, KW, BauGB,
+           LBO, BauR, m², m³, %, §
+         - Numbers and dates
+         - Compound technical Bauwesen terms even if rare:
+           Bauantrags-Addendum, Bestandsschutz, Vertrauensschutz,
+           Übergangsregelung, Abstandsfläche, Genehmigungsbescheid,
+           Auslegungsfrist, etc.
+
+       Return ONLY JSON in this exact shape, no markdown:
+         {
+           "has_invalid": boolean,
+           "invalid_tokens": ["word1", "word2"],
+           "reasoning": "short explanation in DE"
+         }
+
+       Be strict on syllable-drop typos (e.g., 'Vosperrungen' for
+       'Vollsperrungen', 'beeinfesondere' for 'beeinflussen.
+       Insbesondere'). These are the primary failure modes.
+
+       Text to review:
+       ---
+       ${draftText}
+       ---
+    `;
+    const criticResponse = await criticModel.generateContent({
+        contents: [{ role: 'user', parts: [{ text: criticPrompt }] }],
+        generationConfig: { responseMimeType: 'application/json' }
+    });
+    const criticJson = JSON.parse(criticResponse.response.text());
+    if (criticJson.has_invalid) {
+       throw new Error(`Self-Critic Guard: Dropped draft due to invalid tokens: ${criticJson.invalid_tokens.join(', ')}. Reasoning: ${criticJson.reasoning}`);
     }
 
     return draftText;

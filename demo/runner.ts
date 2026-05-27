@@ -41,7 +41,8 @@ async function runDemo() {
     'NO_IMPACT_BESTANDSSCHUTZ': 0,
     'LOW': 0,
     'MEDIUM': 0,
-    'HIGH': 0
+    'HIGH': 0,
+    'DROPPED_BY_CRITIC': 0
   };
 
   const outputsDir = path.join(__dirname, '../../demo/sample_outputs');
@@ -91,7 +92,12 @@ ${draft}
          console.log(`- Suppressed (Bestandsschutz): ${filing.title}`);
       }
     } catch (e: any) {
-      console.error(`ERROR processing filing ${filing.id || filing.title}: ${e.message}`);
+      if (e.message && e.message.includes('Self-Critic Guard')) {
+         stats['DROPPED_BY_CRITIC']++;
+         console.warn(`- Dropped ${filing.id || filing.title} by self-critic guard: ${e.message}`);
+      } else {
+         console.error(`ERROR processing filing ${filing.id || filing.title}: ${e.message}`);
+      }
       // Drop the draft and continue to next filing
       continue;
     }
