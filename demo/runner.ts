@@ -44,7 +44,7 @@ async function runDemo() {
     'HIGH': 0
   };
 
-  const outputsDir = path.join(__dirname, 'sample_outputs');
+  const outputsDir = path.join(__dirname, '../../demo/sample_outputs');
   if (!fs.existsSync(outputsDir)) {
     fs.mkdirSync(outputsDir, { recursive: true });
   }
@@ -65,6 +65,10 @@ async function runDemo() {
     if (doctrine.verdict !== 'NO_IMPACT_BESTANDSSCHUTZ' && doctrine.verdict !== 'NO_IMPACT_OTHER') {
        const draft = await draftAddendum(filing, project, doctrine);
        
+       const safeDate = filing.publish_date ? new Date(filing.publish_date).toISOString().split('T')[0] : 'unknown';
+       const fileId = filing.id || Math.random().toString(36).substring(7);
+       const fileName = `${fileId}_${doctrine.verdict}_${safeDate}.md`;
+       
        const content = `
 # PermitWatchDog Alert: ${doctrine.verdict}
 
@@ -79,7 +83,7 @@ ${doctrine.reasoning}
 ## Drafted Addendum
 ${draft}
 `;
-       fs.writeFileSync(path.join(outputsDir, `alert_${filing.id}.md`), content);
+       fs.writeFileSync(path.join(outputsDir, fileName), content);
        console.log(`- Generated ${doctrine.verdict} alert for: ${filing.title}`);
     } else if (doctrine.verdict === 'NO_IMPACT_BESTANDSSCHUTZ') {
        // Log to show we caught it
