@@ -6,17 +6,17 @@
 **Date:** 2026-05-26T00:00:00.000Z
 
 ## Doctrine Reasoning
-Auflage betroffen: Die Einreichung "Neufassung der DIN 4109 - Baulicher Schallschutz" aktualisiert explizit die DIN 4109. Auflage 04 "Lärmschutz-Nachweis nach DIN 4109" bezieht sich direkt auf diese Norm und ihre Anforderungen, was bedeutet, dass die Auflage durch die Aktualisierung der Norm beeinflusst wird. (Auflage 04: Lärmschutz-Nachweis nach DIN 4109)
+Auflage betroffen: The filing, "Neufassung der DIN 4109 - Baulicher Schallschutz", explicitly states that "Die DIN 4109 zum baulichen Schallschutz wurde mit sofortiger Wirkung ... aktualisiert" and introduces "Neue Grenzwerte für Fassadenfenster". This directly updates the requirements for "Lärmschutz-Nachweis nach DIN 4109" as specified in Auflage 04. (Auflage 04: Lärmschutz-Nachweis nach DIN 4109)
 **System Doctrine Route:** AUFLAGE
 
 ## Drafted Addendum
 Sehr geehrte Damen und Herren,
 
-wir setzen Sie hiermit von der mit sofortiger Wirkung in Kraft getretenen Neufassung der DIN 4109 zum baulichen Schallschutz in Kenntnis. Die überarbeitete Norm ist für das Innenstadt-Gebiet, insbesondere die Quadrate Q5 und Q6, bindend. Für alle in Ausführung befindlichen Vorhaben sind demgemäß die neu definierten Grenzwerte für Fassadenfenster nachzuweisen.
+Wir nehmen Bezug auf die Neufassung der DIN 4109 zum baulichen Schallschutz. Diese wurde mit sofortiger Wirkung für das Innenstadt-Gebiet Mannheim, insbesondere die Quadrate Q5 und Q6, aktualisiert. Die Neuregelung erfordert neue Grenzwerte für Fassadenfenster bei allen noch in Ausführung befindlichen Vorhaben, wozu auch das Projekt Wohnhaus Q5, 18, zählt.
 
-Dies betrifft explizit das in Ausführung befindliche Vorhaben Wohnhaus Q5, 18, Mannheim Innenstadt. Die im bauaufsichtlichen Verfahren erteilte Auflage 04 "Lärmschutz-Nachweis nach DIN 4109" wird durch die Neufassung der DIN 4109 direkt tangiert. Demzufolge greift in diesem speziellen Fall kein Bestandsschutz mehr, und die neuen, verschärften Anforderungen sind vollumfänglich zu berücksichtigen.
+Die Aktualisierung der DIN 4109 durchbricht den Bestandsschutz für die betroffenen Bauvorhaben. Insbesondere die Auflage 04, welche den Lärmschutz-Nachweis nach DIN 4109 vorsieht, ist von dieser Neuregelung unmittelbar betroffen. Die explizit formulierten neuen Grenzwerte für Fassadenfenster müssen somit zwingend nachgewiesen werden.
 
-Wir fordern Sie daher auf, die Ausführungsplanung für das Bauvorhaben Wohnhaus Q5, 18, hinsichtlich der einzuhaltenden Schallschutzanforderungen für die Fassadenfenster einer umgehenden Überprüfung zu unterziehen. Erforderliche Planungsanpassungen sind entsprechend der novellierten Norm zu erarbeiten und uns zur Abstimmung vorzulegen.
+Vor diesem Hintergrund ist eine umgehende Überprüfung der bestehenden Werk- und Ausführungsplanung für das Wohnhaus Q5, 18, unerlässlich. Wir bitten Sie, die erforderlichen Anpassungen der Planung für die Fassadenfenster vorzunehmen und den entsprechend aktualisierten Lärmschutz-Nachweis unverzüglich beizubringen.
 
 Mit freundlichen Grüßen
 Clarence Johnson
