@@ -29,3 +29,19 @@ model ScraperRun {
   errors_count           Int
   source_breakdown       Json
 }
+
+model Project {
+  id                       String   @id @default(uuid())
+  project_name             String
+  address                  String
+  gemarkung                String
+  flur                     String
+  flurstueck               String
+  bauantrag_nr             String
+  aktenzeichen             String
+  lifecycle_stage          String
+  bescheid_auflagen        String[]
+  abstandsflaeche_nachbarn String[]
+  created_at               DateTime @default(now())
+  updated_at               DateTime @updatedAt
+}
