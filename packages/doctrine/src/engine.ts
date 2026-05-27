@@ -58,10 +58,10 @@ export async function evaluateFiling(input: DoctrineInput): Promise<DoctrineOutp
   }
 
   // 4. BESTANDSSCHUTZ / VERTRAUENSSCHUTZ TRACK
-  if (filing.title.toLowerCase().includes('bebauungsplan') && !text.includes('din')) {
+  if ((text.includes('bebauungsplan') || text.includes('bauordnung') || text.includes('sanierungssatzung')) && !text.includes('din')) {
     return {
       verdict: 'NO_IMPACT_BESTANDSSCHUTZ',
-      reasoning: 'B-Plan-Änderung nach Genehmigung. Vertrauensschutz/Bestandsschutz greift.',
+      reasoning: 'Satzungs/B-Plan-Änderung nach Genehmigung. Vertrauensschutz/Bestandsschutz greift.',
       confidence: 0.9,
       pierced_by: null,
       applicable_doctrine_layer: project.lifecycle_stage === 'Antrag genehmigt' ? 'VERTRAUENSSCHUTZ' : 'BESTANDSSCHUTZ',
@@ -99,7 +99,7 @@ export async function evaluateFiling(input: DoctrineInput): Promise<DoctrineOutp
     } else {
       try {
         const model = ai.getGenerativeModel({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.1-flash',
         generationConfig: {
           responseMimeType: 'application/json',
           responseSchema: {
