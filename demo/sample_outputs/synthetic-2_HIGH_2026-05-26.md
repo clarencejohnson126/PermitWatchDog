@@ -6,20 +6,19 @@
 **Date:** 2026-05-26T00:00:00.000Z
 
 ## Doctrine Reasoning
-Auflage betroffen (Mock)
-**Pierced By:** AUFLAGE
+Auflage betroffen: The filing states that projects must "erneuern" (renew) their "F90 Nachweise" according to "DIN 4102". Auflage 17 explicitly requires "Nachweis F90 Brandschutz DIN 4102", which is directly impacted by this renewal requirement. (Auflage 17: Nachweis F90 Brandschutz DIN 4102)
+**System Doctrine Route:** AUFLAGE
 
 ## Drafted Addendum
-ENTWURF (System Fallback):
-
 Sehr geehrte Damen und Herren,
 
-wir nehmen Bezug auf die aktuelle Bekanntmachung "Novellierung Brandschutz-Vorgaben LBO BW für Gebäudeklasse 4".
+wir nehmen Bezug auf die erfolgte Novellierung der Brandschutz-Vorgaben der Landesbauordnung Baden-Württemberg für die Gebäudeklasse 4, resultierend aus dem Beschluss des Landtags Baden-Württemberg.
 
-Da unser Bauvorhaben "Wohnhaus Q5, 18 — Mannheim Innenstadt" derzeit den Status "im Bau" aufweist, durchbricht diese Änderung den Bestandsschutz. Konkret ist die Auflage AUFLAGE betroffen, was eine Anpassung der Ausführungsplanung erzwingt.
+Für das Bauvorhaben Wohnhaus Q5, 18 in Mannheim Innenstadt, welches sich noch im Bau befindet, sind die novellierten Vorgaben der Landesbauordnung zwingend zu berücksichtigen. Insbesondere ist die in der Baugenehmigung formulierte Auflage 17, "Nachweis F90 Brandschutz DIN 4102", unmittelbar betroffen, da die F90 Nachweise gemäß DIN 4102 zu erneuern sind.
 
-Wir bitten um umgehende Prüfung des Sachverhalts und Rückmeldung zur notwendigen Planungsanpassung.
+Wir fordern Sie hiermit auf, die bestehende Brandschutzplanung des Objekts umgehend auf Konformität mit den neuen Bestimmungen zu prüfen und die erforderlichen F90 Nachweise gemäß DIN 4102 anzupassen sowie entsprechende Maßnahmen einzuleiten.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
+
 Clarence Johnson
 RebelzBau Mannheim GmbH

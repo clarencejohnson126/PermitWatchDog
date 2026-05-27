@@ -7,19 +7,20 @@
 
 ## Doctrine Reasoning
 Bestandsschutz greift voraussichtlich, aber potenzieller Konflikt möglich — bitte prüfen.
-**Pierced By:** N/A
+**System Doctrine Route:** N/A
 
 ## Drafted Addendum
-ENTWURF (System Fallback):
+**Betreff:** Amtsblatt KW 11 - Bauvorhaben Wohnhaus Q5, 18
 
 Sehr geehrte Damen und Herren,
 
-wir nehmen Bezug auf die aktuelle Bekanntmachung "Amtsblatt KW 11".
+wir nehmen Bezug auf die Bekanntmachung im Amtsblatt KW 11, Dokumentation mah_hp03_amtsb.01. Diese wurde im Kontext des Bauvorhabens Wohnhaus Q5, 18 — Mannheim Innenstadt einer internen Bewertung unterzogen.
 
-Für unser Bauvorhaben "Wohnhaus Q5, 18 — Mannheim Innenstadt" (Status: im Bau) greift voraussichtlich der Bestandsschutz, aber die vorliegende Änderung könnte dennoch planungsrelevante Auswirkungen haben.
+Für das laufende Bauvorhaben greift voraussichtlich der Bestandsschutz. Dennoch besteht aufgrund der Inhalte der genannten Bekanntmachung ein potenzieller Konflikt, welcher Auswirkungen auf die genehmigte Planung haben könnte.
 
-Wir bitten um kurze überschlägige Prüfung, ob sich hieraus Handlungsbedarf für die weitere Umsetzung ergibt.
+Wir bitten Sie daher um eine unverzügliche Prüfung der Auswirkungen dieser Bekanntmachung auf die Bestandsschutzsituation und die genehmigungsrechtliche Konformität der Ausführungsplanung. Gegebenenfalls sind entsprechende Anpassungen der Planungsunterlagen zu veranlassen.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen
+
 Clarence Johnson
 RebelzBau Mannheim GmbH
