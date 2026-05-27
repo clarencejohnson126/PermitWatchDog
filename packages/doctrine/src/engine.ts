@@ -83,23 +83,12 @@ export async function evaluateFiling(input: DoctrineInput): Promise<DoctrineOutp
     `;
 
     if (!process.env.GEMINI_API_KEY) {
-      // Mock for test environment without API key
-      const mockMatches = text.includes('din 4109') || text.includes('solarpflicht') || text.includes('din 4102') || text.includes('stellplatzsatzung') || text.includes('lbo-bw novelle');
-      const isMedium = text.includes('solarpflicht') || text.includes('stellplatzsatzung');
-      if (mockMatches) {
-        return {
-          verdict: isMedium ? 'MEDIUM' : 'HIGH',
-          reasoning: 'Auflage betroffen (Mock)',
-          confidence: 0.8,
-          pierced_by: 'AUFLAGE',
-          applicable_doctrine_layer: 'NONE',
-          requires_llm_draft: true
-        };
-      }
-    } else {
-      try {
-        const model = ai.getGenerativeModel({
-        model: 'gemini-3.1-flash',
+      throw new Error('GEMINI_API_KEY is missing.');
+    }
+
+    try {
+      const model = ai.getGenerativeModel({
+        model: 'gemini-2.5-flash',
         generationConfig: {
           responseMimeType: 'application/json',
           responseSchema: {
@@ -137,10 +126,8 @@ export async function evaluateFiling(input: DoctrineInput): Promise<DoctrineOutp
           };
         }
       }
-      } catch (e) {
-        console.error('LLM Fallback failed:', e);
-        // Fall through to fail-open
-      }
+    } catch (e: any) {
+      throw new Error(`Doctrine LLM evaluation failed: ${e.message}`);
     }
   }
 

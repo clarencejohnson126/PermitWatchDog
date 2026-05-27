@@ -59,17 +59,18 @@ async function runDemo() {
        continue;
     }
 
-    const doctrine = await scoreFiling(filing, project);
-    stats[doctrine.verdict]++;
+    try {
+      const doctrine = await scoreFiling(filing, project);
+      stats[doctrine.verdict]++;
 
-    if (doctrine.verdict !== 'NO_IMPACT_BESTANDSSCHUTZ' && doctrine.verdict !== 'NO_IMPACT_OTHER') {
-       const draft = await draftAddendum(filing, project, doctrine);
-       
-       const safeDate = filing.publish_date ? new Date(filing.publish_date).toISOString().split('T')[0] : 'unknown';
-       const fileId = filing.id || Math.random().toString(36).substring(7);
-       const fileName = `${fileId}_${doctrine.verdict}_${safeDate}.md`;
-       
-       const content = `
+      if (doctrine.verdict !== 'NO_IMPACT_BESTANDSSCHUTZ' && doctrine.verdict !== 'NO_IMPACT_OTHER') {
+         const draft = await draftAddendum(filing, project, doctrine);
+         
+         const safeDate = filing.publish_date ? new Date(filing.publish_date).toISOString().split('T')[0] : 'unknown';
+         const fileId = filing.id || Math.random().toString(36).substring(7);
+         const fileName = `${fileId}_${doctrine.verdict}_${safeDate}.md`;
+         
+         const content = `
 # PermitWatchDog Alert: ${doctrine.verdict}
 
 **Filing:** ${filing.title}
@@ -78,16 +79,20 @@ async function runDemo() {
 
 ## Doctrine Reasoning
 ${doctrine.reasoning}
-**Pierced By:** ${doctrine.pierced_by || 'N/A'}
+**System Doctrine Route:** ${doctrine.pierced_by || 'N/A'}
 
 ## Drafted Addendum
 ${draft}
 `;
-       fs.writeFileSync(path.join(outputsDir, fileName), content);
-       console.log(`- Generated ${doctrine.verdict} alert for: ${filing.title}`);
-    } else if (doctrine.verdict === 'NO_IMPACT_BESTANDSSCHUTZ') {
-       // Log to show we caught it
-       console.log(`- Suppressed (Bestandsschutz): ${filing.title}`);
+         fs.writeFileSync(path.join(outputsDir, fileName), content);
+         console.log(`- Generated ${doctrine.verdict} alert for: ${filing.title}`);
+      } else if (doctrine.verdict === 'NO_IMPACT_BESTANDSSCHUTZ') {
+         // Log to show we caught it
+         console.log(`- Suppressed (Bestandsschutz): ${filing.title}`);
+      }
+    } catch (e: any) {
+      console.error(`ERROR processing filing ${filing.id || filing.title}: ${e.message}`);
+      process.exit(1);
     }
   }
 
