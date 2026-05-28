@@ -2,6 +2,7 @@ import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 import SectionWrapper from '../../components/SectionWrapper';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 type DoctrineLayerProps = {
   number: string;
@@ -72,7 +73,17 @@ export default function DoktrinPage() {
       <SectionWrapper>
         <div className="max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-serif tracking-tight text-white mb-8">
-            Die <span className="text-blue">Doktrin.</span>
+            {"Die Doktrin.".split(' ').map((word, i) => (
+              <motion.span
+                key={i}
+                className={`inline-block ${word.includes('Doktrin') ? 'text-blue' : ''}`}
+                initial={{ opacity: 0, y: 40, rotateX: -45 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay: i * 0.08, ease: [0.22, 0.8, 0.4, 1] }}
+              >
+                {word}&nbsp;
+              </motion.span>
+            ))}
           </h1>
           <p className="font-body text-xl md:text-2xl text-zinc-400 leading-relaxed mb-20">
             Die Bauaufsicht ist kein Suchspiel. Sie ist ein rechtliches Filterproblem.

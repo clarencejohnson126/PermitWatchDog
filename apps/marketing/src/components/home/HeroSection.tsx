@@ -1,63 +1,74 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import CTAButton from '../CTAButton';
+import Link from 'next/link';
+import MagneticButton from '../MagneticButton';
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full h-screen min-h-[800px] flex items-center justify-center overflow-hidden pt-20">
-      <div className="absolute inset-0 z-0 bg-black">
+    <section className="relative min-h-screen flex items-center pt-24 overflow-hidden">
+      <div className="absolute inset-0 z-0">
         <video 
           autoPlay 
           muted 
           loop 
-          playsInline 
-          preload="metadata"
-          poster="/images/hero_doc_explosion.png"
+          playsInline
           className="object-cover w-full h-full opacity-40 mix-blend-screen"
         >
           <source src="/videos/hero-loop.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black pointer-events-none" />
       </div>
-      
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col items-start">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-tight mb-2 tracking-tight">
-            DIE ERSTE KI-GESTÜTZTE
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="max-w-4xl">
+          <div className="inline-block mb-6 px-4 py-1.5 border border-blue-dark/50 bg-blue/10 backdrop-blur-md rounded-full text-blue-light text-sm font-sans tracking-wide uppercase">
+            Der Bauantrags-Copilot
+          </div>
+          
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-8 leading-[1.1] text-white">
+            {"Die erste KI-gestützte Bauaufsicht".split(' ').map((word, i) => (
+              <motion.span
+                key={i}
+                className="inline-block"
+                initial={{ opacity: 0, y: 40, rotateX: -45 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay: i * 0.08, ease: [0.22, 0.8, 0.4, 1] }}
+              >
+                {word}&nbsp;
+              </motion.span>
+            ))}
           </h1>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-sans text-blue mb-8 tracking-widest">
-            BAUAUFSICHT.
-          </h1>
-        </motion.div>
-        
-        <motion.p 
-          className="font-body text-xl md:text-2xl text-zinc-300 max-w-2xl mb-12 leading-relaxed"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          Mannheims Amtsblätter, Bauanträge und DIN-Normen
-          automatisch überwacht und rechtssicher aufbereitet.
-        </motion.p>
-        
-        <motion.div 
-          className="flex flex-col sm:flex-row gap-6 items-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <CTAButton href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_T0 || "/preise"}>
-            BAUVORHABEN ABSICHERN
-          </CTAButton>
-          <a href="#how-it-works" className="font-sans text-white tracking-widest hover:text-blue-light transition-colors border-b border-transparent hover:border-blue-light pb-1">
-            WIE ES FUNKTIONIERT
-          </a>
-        </motion.div>
+
+          <p className="font-sans text-xl md:text-2xl text-zinc-400 mb-12 max-w-2xl leading-relaxed">
+            Verhindern Sie behördliche Baustopps in Mannheim. Wir überwachen das Amtsblatt und wehren überzogene Auflagen durch automatisierte <strong>Verhältnismäßigkeits-Prüfungen</strong> ab.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-6">
+            <MagneticButton>
+              <Link 
+                href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_T0 || "#"} 
+                className="group relative inline-flex items-center justify-center px-8 py-4 bg-blue text-white font-sans text-lg tracking-wide hover:bg-blue-light transition-colors overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center">
+                  Bauvorhaben absichern
+                  <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </Link>
+            </MagneticButton>
+            
+            <MagneticButton>
+              <Link 
+                href="/demo" 
+                className="inline-flex items-center justify-center px-8 py-4 border border-zinc-700 hover:border-white text-zinc-300 hover:text-white font-sans text-lg tracking-wide transition-colors"
+              >
+                Doktrin ansehen
+              </Link>
+            </MagneticButton>
+          </div>
+        </div>
       </div>
     </section>
   );

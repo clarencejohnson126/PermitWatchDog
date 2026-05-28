@@ -2,6 +2,7 @@ import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 import SectionWrapper from '../../components/SectionWrapper';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 type Tier = {
   key: string;
@@ -120,7 +121,17 @@ export default function PricingPage() {
         <div className="max-w-4xl">
           <p className="font-body text-xs tracking-[0.25em] uppercase text-blue mb-6">Preise</p>
           <h1 className="text-5xl md:text-7xl font-serif tracking-tight text-white mb-8">
-            Bauen ohne <span className="text-blue">Bauamt-Überraschungen.</span>
+            {"Bauen ohne Bauamt-Überraschungen.".split(' ').map((word, i) => (
+              <motion.span
+                key={i}
+                className={`inline-block ${word.includes('Überraschungen') ? 'text-blue' : ''}`}
+                initial={{ opacity: 0, y: 40, rotateX: -45 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay: i * 0.08, ease: [0.22, 0.8, 0.4, 1] }}
+              >
+                {word}&nbsp;
+              </motion.span>
+            ))}
           </h1>
           <p className="font-body text-xl md:text-2xl text-zinc-400 leading-relaxed mb-16">
             Vom Ein-LKW-Betrieb bis zum Bauträger mit eigenem Rechenzentrum &mdash; PermitWatchDog

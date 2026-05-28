@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import InteractiveBauantrag from '../../components/InteractiveBauantrag';
 import MannheimQuadrateMap from '../../components/MannheimQuadrateMap';
+import { motion } from 'framer-motion';
+import MagneticButton from '../../components/MagneticButton';
 
 const roadmap = [
   { phase: 'Phase 1', when: 'Aug 2026', cities: ['Mannheim'], note: 'Pilot-Start · erste zahlende Kunden im Rhein-Neckar-Raum' },
@@ -40,7 +42,17 @@ export default function MannheimPage() {
               Pilot-Gemeinde
             </p>
             <h1 className="text-5xl md:text-7xl font-serif tracking-tight text-white mb-6">
-              Mannheim <span className="text-blue">zuerst.</span>
+              {"Mannheim zuerst.".split(' ').map((word, i) => (
+                <motion.span
+                  key={i}
+                  className={`inline-block ${word.includes('zuerst') ? 'text-blue' : ''}`}
+                  initial={{ opacity: 0, y: 40, rotateX: -45 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ delay: i * 0.08, ease: [0.22, 0.8, 0.4, 1] }}
+                >
+                  {word}&nbsp;
+                </motion.span>
+              ))}
             </h1>
             <p className="font-body text-xl md:text-2xl text-zinc-200 leading-relaxed">
               Wir starten dort, wo das Bauamt schon digital denkt &mdash; und der Gründer
@@ -216,12 +228,14 @@ export default function MannheimPage() {
             <p>
               Ein 30-minütiges Sondierungsgespräch genügt, um die Idee zu prüfen.
             </p>
-            <Link
-              href="mailto:hallo@permitwatchdog.com?subject=Sondierungsgespr%C3%A4ch%20Stadt%20Mannheim"
-              className="inline-flex items-center justify-center mt-4 px-6 py-3 font-sans tracking-widest rounded bg-blue hover:bg-blue-light text-white shadow-[0_0_15px_rgba(22,84,255,0.3)] hover:shadow-[0_0_25px_rgba(58,123,255,0.5)] transition-all uppercase"
-            >
-              Sondierungsgespräch anfragen
-            </Link>
+            <MagneticButton>
+              <Link
+                href="mailto:hallo@permitwatchdog.com?subject=Sondierungsgespr%C3%A4ch%20Stadt%20Mannheim"
+                className="inline-flex items-center justify-center mt-4 px-6 py-3 font-sans tracking-widest rounded bg-blue hover:bg-blue-light text-white shadow-[0_0_15px_rgba(22,84,255,0.3)] hover:shadow-[0_0_25px_rgba(58,123,255,0.5)] transition-all uppercase"
+              >
+                Sondierungsgespräch anfragen
+              </Link>
+            </MagneticButton>
           </div>
         </div>
       </SectionWrapper>
