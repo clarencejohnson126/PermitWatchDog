@@ -83,8 +83,8 @@ export default function MannheimPage() {
 
           <div className="relative aspect-[4/5] w-full border border-zinc-800 rounded-xl overflow-hidden">
             <Image
-              src="/images/mannheim_skyline_real.jpg"
-              alt="Mannheimer Wasserturm und Innenstadt zur blauen Stunde"
+              src="/images/mannheim_quadrate_map.png"
+              alt="Mannheimer Quadrate"
               fill
               className="object-cover"
             />

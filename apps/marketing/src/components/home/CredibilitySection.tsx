@@ -29,10 +29,10 @@ export default function CredibilitySection() {
         </div>
         <div className="w-full md:w-[500px] aspect-[4/5] relative rounded-xl overflow-hidden border border-zinc-800 shadow-2xl">
           <Image 
-            src="/images/bauleiter_portrait.png" 
-            alt="Clarence Johnson" 
+            src="/images/credibility_team.png" 
+            alt="Team auf der Baustelle" 
             fill 
-            className="object-cover grayscale hover:grayscale-0 transition-all duration-700" 
+            className="object-cover" 
           />
         </div>
       </div>

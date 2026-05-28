@@ -38,7 +38,7 @@ export default function UeberUnsPage() {
           </div>
           <div className="relative aspect-[4/5] w-full border border-zinc-800 rounded-xl overflow-hidden shadow-2xl">
             <Image 
-              src="/images/bauleiter_portrait.png" 
+              src="/images/founder_portrait.png" 
               alt="Clarence Johnson" 
               fill 
               className="object-cover grayscale hover:grayscale-0 transition-all duration-700" 

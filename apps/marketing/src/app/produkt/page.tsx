@@ -26,9 +26,7 @@ export default function ProduktPage() {
           {/* Step 1 */}
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="relative aspect-video w-full border border-zinc-800 rounded-xl overflow-hidden shadow-2xl">
-              <video autoPlay muted loop playsInline className="object-cover w-full h-full opacity-60">
-                <source src="/videos/hero-loop.mp4" type="video/mp4" />
-              </video>
+              <Image src="/images/produkt_hero.png" alt="Empty Bauamt at night" fill className="object-cover opacity-60" />
             </div>
             <div>
               <h3 className="font-sans text-5xl text-blue-dark mb-4">01</h3>
@@ -52,16 +50,14 @@ export default function ProduktPage() {
               </p>
             </div>
             <div className="relative aspect-video w-full border border-zinc-800 rounded-xl overflow-hidden shadow-2xl order-1 md:order-2">
-              <video autoPlay muted loop playsInline className="object-cover w-full h-full opacity-60">
-                <source src="/videos/doctrine-intro.mp4" type="video/mp4" />
-              </video>
+              <Image src="/images/produkt_doctrine.png" alt="Bauantrag with Auflagen" fill className="object-cover opacity-60" />
             </div>
           </div>
 
           {/* Step 3 */}
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="relative aspect-square w-full border border-zinc-800 rounded-xl overflow-hidden shadow-2xl">
-              <Image src="/images/bauantrag.png" alt="Bauantrag" fill className="object-cover mix-blend-luminosity hover:mix-blend-normal transition-all" />
+              <Image src="/images/bauantrag_produkt.png" alt="Bauantrag" fill className="object-cover mix-blend-luminosity hover:mix-blend-normal transition-all" />
             </div>
             <div>
               <h3 className="font-sans text-5xl text-blue-dark mb-4">03</h3>
