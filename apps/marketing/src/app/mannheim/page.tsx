@@ -25,7 +25,7 @@ export default function MannheimPage() {
           loop
           playsInline
           preload="metadata"
-          poster="/images/mannheim_skyline_dawn.png"
+          poster="/images/mannheim_skyline_real.jpg"
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/videos/mannheim-aerial.mp4" type="video/mp4" />
@@ -82,7 +82,7 @@ export default function MannheimPage() {
 
           <div className="relative aspect-[4/5] w-full border border-zinc-800 rounded-xl overflow-hidden">
             <Image
-              src="/images/mannheim_skyline_dawn.png"
+              src="/images/mannheim_skyline_real.jpg"
               alt="Mannheimer Wasserturm und Innenstadt zur blauen Stunde"
               fill
               className="object-cover"
