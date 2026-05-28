@@ -6,7 +6,6 @@ import SectionWrapper from '../../components/SectionWrapper';
 import Image from 'next/image';
 import Link from 'next/link';
 import InteractiveBauantrag from '../../components/InteractiveBauantrag';
-import MannheimQuadrateMap from '../../components/MannheimQuadrateMap';
 import { motion } from 'framer-motion';
 import MagneticButton from '../../components/MagneticButton';
 
@@ -105,9 +104,6 @@ export default function MannheimPage() {
           </div>
         </div>
       </SectionWrapper>
-
-      {/* 3D Quadrate map — interactive React Three Fiber */}
-      <MannheimQuadrateMap />
 
       {/* Pilot project Q5,18 */}
       <SectionWrapper>
