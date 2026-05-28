@@ -1,7 +1,18 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "installCommand": "npm install",
-  "regions": ["fra1"]
+  "regions": ["fra1"],
+  "crons": [
+    {
+      "path": "/api/cron/nightly",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/dispatch",
+      "schedule": "0 6 * * *"
+    }
+  ]
 }
