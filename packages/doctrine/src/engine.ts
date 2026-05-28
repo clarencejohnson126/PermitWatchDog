@@ -99,7 +99,7 @@ export async function evaluateFiling(input: DoctrineInput): Promise<DoctrineOutp
 
       try {
         const model = ai.getGenerativeModel({
-          model: 'gemini-2.5-flash',
+          model: 'gemini-3.1-flash-lite',
           generationConfig: {
             responseMimeType: 'application/json',
             responseSchema: {
@@ -209,7 +209,7 @@ export async function evaluateFiling(input: DoctrineInput): Promise<DoctrineOutp
 
       try {
         const model = ai.getGenerativeModel({
-          model: 'gemini-2.5-flash',
+          model: 'gemini-3.1-flash-lite',
           generationConfig: {
             responseMimeType: 'application/json',
             responseSchema: {

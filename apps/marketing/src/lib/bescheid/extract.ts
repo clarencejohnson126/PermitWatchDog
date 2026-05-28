@@ -93,8 +93,9 @@ export async function extractBescheid(pdfBytes: Buffer, mimeType = 'application/
 
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
-    // gemini-2.0-flash is deprecated for new accounts → use 2.5-flash.
-    model: 'gemini-2.5-flash',
+    // Gemini 3.1 — full `gemini-3.1-flash` not GA on this account, using the
+    // GA `gemini-3.1-flash-lite` which supports multimodal PDF input.
+    model: 'gemini-3.1-flash-lite',
     systemInstruction: SYSTEM_PROMPT,
     generationConfig: {
       temperature: 0.1,

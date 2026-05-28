@@ -30,11 +30,11 @@ export async function draftAddendum(filing: any, project: any, doctrineOutput: a
     4. Formelle Verabschiedung (Mit freundlichen Grüßen, Clarence Johnson, RebelzBau Mannheim GmbH).
   `;
   try {
-    const model = ai.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const model = ai.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
     const response = await model.generateContent(prompt);
     const draftText = response.response.text();
 
-    const criticModel = ai.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const criticModel = ai.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
     const criticPrompt = `
        You are a strict German-language editor reviewing AI-generated
        text for a construction-industry product. Read the following
