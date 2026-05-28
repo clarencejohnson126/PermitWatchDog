@@ -221,7 +221,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-semibold transition-colors"
               >
-                Jetzt abonnieren
+                Bauvorhaben absichern (29 € / Monat)
               </Link>
             </div>
 
