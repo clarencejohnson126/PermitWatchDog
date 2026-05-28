@@ -262,7 +262,7 @@ function CtaVisual({ active }: { active: boolean }) {
         transition={{ delay: 0.4, duration: 0.7, ease: 'easeOut' }}
         className="font-serif text-5xl md:text-6xl text-white leading-none mb-4"
       >
-        Stille,
+        Auflagen geändert?
       </motion.p>
       <motion.p
         initial={{ opacity: 0, scale: 0.96 }}
@@ -270,7 +270,7 @@ function CtaVisual({ active }: { active: boolean }) {
         transition={{ delay: 0.65, duration: 0.7, ease: 'easeOut' }}
         className="font-serif text-5xl md:text-6xl text-blue italic leading-none mb-8"
       >
-        bis es zählt.
+        Wir sagen Bescheid.
       </motion.p>
       <motion.p
         initial={{ opacity: 0 }}
@@ -278,7 +278,7 @@ function CtaVisual({ active }: { active: boolean }) {
         transition={{ delay: 0.95, duration: 0.6 }}
         className="text-sm text-zinc-400 max-w-xs mb-8"
       >
-        Bescheid hochladen, drei Auflagen extrahieren — wir machen den Rest.
+        Bescheid hochladen, jede Auflage wird erkannt — wir machen den Rest.
       </motion.p>
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -364,7 +364,7 @@ const chapters: Chapter[] = [
     eyebrow: 'Kapitel 04 · Was wir tun',
     heading: (
       <>
-        Stille. Bis ein echter <span className="text-blue">Treffer kommt.</span>
+        Bis ein echter <span className="text-blue">Treffer kommt — kein Mucks.</span>
       </>
     ),
     body: (

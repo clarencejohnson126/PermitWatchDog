@@ -44,10 +44,10 @@ export default function WelcomeVideoSection() {
         {/* Eyebrow + headline */}
         <div className="max-w-3xl mb-12">
           <p className="font-body text-xs tracking-[0.25em] uppercase text-blue mb-4">
-            46 Sekunden · Hochdeutsch
+            44 Sekunden · Hochdeutsch
           </p>
           <h2 className="font-serif text-4xl md:text-5xl text-white leading-tight">
-            Stille, bis es <span className="text-blue">zählt.</span>
+            Auflagen geändert? <span className="text-blue">Wir sagen Bescheid.</span>
           </h2>
           <p className="font-body text-lg text-zinc-400 mt-6 leading-relaxed">
             Was PermitWatchDog macht — in einem kompakten Tutorial.
@@ -109,7 +109,7 @@ export default function WelcomeVideoSection() {
 
         {/* Subtle metadata strip */}
         <div className="mt-6 flex items-center justify-between text-xs font-body tracking-widest uppercase text-zinc-500">
-          <span>Dauer · 0:46</span>
+          <span>Dauer · 0:44</span>
           <span>Hochdeutsch · ElevenLabs v3 · mit Untertiteln</span>
         </div>
       </div>
