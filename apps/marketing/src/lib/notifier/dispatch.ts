@@ -1,24 +1,28 @@
-// T0 dispatcher — sends plain German notification emails for unnotified alerts.
-// Uses Resend (no OAuth, free 3000 emails/mo). T1+ adds an Outlook-draft path
-// via Microsoft Graph for users who want the email pre-staged in their inbox.
+// Dispatcher — creates DRAFTED emails in each user's own Outlook inbox via
+// Microsoft Graph. Matches the product promise: "fertige E-Mail in IHREM
+// Outlook" — never sent from a third-party domain, always pre-staged for the
+// user to review and forward to their architect/Bauamt.
+//
+// If a user hasn't connected Outlook yet, their alerts are queued (notified_at
+// stays NULL) and will dispatch automatically once they complete the OAuth
+// flow at /oauth/microsoft/start.
 
-import { Resend } from 'resend';
 import { prisma } from '@/lib/db/prisma';
+import { createOutlookDraft } from './outlook';
 
-const FROM_DEFAULT = 'PermitWatchDog <alerts@permitwatchdog.com>';
 const MAX_PER_RUN = 100;
 
 export interface DispatchSummary {
   started_at: string;
   completed_at: string;
   duration_ms: number;
-  sent: number;
+  drafts_created: number;
   failed: number;
+  skipped_no_outlook: number;
   skipped_no_email: number;
 }
 
 function buildEmail(args: {
-  user_email: string;
   project_name: string;
   pierced_auflage: string;
   severity: string;
@@ -30,41 +34,44 @@ function buildEmail(args: {
   bauantrag_nr: string;
 }): { subject: string; text: string; html: string } {
   const severityWord =
-    args.severity === 'high' ? 'HOHE Priorität' : args.severity === 'medium' ? 'mittlere Priorität' : 'geringe Priorität';
+    args.severity === 'high'
+      ? 'HOHE Priorität'
+      : args.severity === 'medium'
+        ? 'mittlere Priorität'
+        : 'geringe Priorität';
   const publishDate = args.filing_publish_date.toLocaleDateString('de-DE', {
-    day: '2-digit', month: 'long', year: 'numeric',
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
   });
 
   const subject = `[PermitWatchDog · ${severityWord}] ${args.pierced_auflage.slice(0, 80)}`;
 
   const text = [
-    `Hallo,`,
-    ``,
-    `eine Änderung wurde gefunden, die möglicherweise eine Ihrer Auflagen betrifft.`,
-    ``,
+    'Hallo,',
+    '',
+    'eine Änderung wurde gefunden, die möglicherweise eine Ihrer Auflagen betrifft.',
+    '',
     `Projekt:      ${args.project_name}${args.bauantrag_nr ? ' (' + args.bauantrag_nr + ')' : ''}`,
     `Auflage:      ${args.pierced_auflage}`,
     `Priorität:    ${severityWord}`,
     `Treffer:      "${args.matched_keyword}"`,
-    ``,
+    '',
     `Quelle:       ${args.filing_title}`,
     `Veröffentl.:  ${publishDate}`,
     `Original:     ${args.filing_url}`,
-    ``,
-    `Kontext (gefundene Stelle):`,
+    '',
+    'Kontext (gefundene Stelle):',
     `  …${args.matched_excerpt}…`,
-    ``,
-    `Was jetzt zu tun ist:`,
-    `1. Originalquelle prüfen (Link oben)`,
-    `2. Mit dem Architekten klären, ob die Änderung Ihre Auflage tatsächlich verschiebt`,
-    `3. Bei einer echten Auflage-Piercing: VOB/B § 6 Abs. 2 Anzeige vorbereiten`,
-    ``,
-    `Dies ist ein T0-Alert (Keyword-Match). Die vollständige Doktrin-Prüfung`,
-    `(Bestandsschutz / Vertrauensschutz / Verhältnismäßigkeit / Übergang) kommt`,
-    `im T1-Plan dazu.`,
-    ``,
-    `— PermitWatchDog`,
-    `https://permit-watch-dog.vercel.app`,
+    '',
+    'Was jetzt zu tun ist:',
+    '1. Originalquelle prüfen (Link oben)',
+    '2. Mit dem Architekten klären, ob die Änderung die Auflage tatsächlich verschiebt',
+    '3. Bei einer echten Auflage-Piercing: VOB/B § 6 Abs. 2 Anzeige vorbereiten',
+    '',
+    'Dieser Entwurf wurde von PermitWatchDog erzeugt — prüfen, anpassen, senden.',
+    '— PermitWatchDog',
+    'https://permit-watch-dog.vercel.app',
   ].join('\n');
 
   const html = `
@@ -89,13 +96,13 @@ function buildEmail(args: {
     <h3 style="font-size:14px;margin:24px 0 8px;">Was jetzt zu tun ist:</h3>
     <ol style="font-size:14px;line-height:1.6;padding-left:20px;color:#444;">
       <li>Originalquelle prüfen (<a href="${escape(args.filing_url)}" style="color:#1654FF;">Link</a>)</li>
-      <li>Mit dem Architekten klären, ob die Änderung Ihre Auflage tatsächlich verschiebt</li>
+      <li>Mit dem Architekten klären, ob die Änderung die Auflage tatsächlich verschiebt</li>
       <li>Bei echter Auflage-Piercing: VOB/B § 6 Abs. 2 Anzeige vorbereiten</li>
     </ol>
 
     <p style="font-size:12px;color:#888;margin:32px 0 0;border-top:1px solid #eee;padding-top:16px;">
-      Dies ist ein T0-Alert (Keyword-Match). Die vollständige Vier-Schichten-Doktrin-Prüfung kommt im T1-Plan dazu.<br/>
-      — <strong>PermitWatchDog</strong> · <a href="https://permit-watch-dog.vercel.app" style="color:#1654FF;">permit-watch-dog.vercel.app</a>
+      Dieser Entwurf wurde von <strong>PermitWatchDog</strong> erzeugt — prüfen, anpassen, senden.<br/>
+      <a href="https://permit-watch-dog.vercel.app" style="color:#1654FF;">permit-watch-dog.vercel.app</a>
     </p>
   </div>
 </body>
@@ -115,24 +122,9 @@ function escape(s: string): string {
 
 export async function dispatchAlerts(): Promise<DispatchSummary> {
   const started_at = new Date();
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL ?? FROM_DEFAULT;
-
-  if (!apiKey) {
-    console.warn('[dispatch] RESEND_API_KEY not set — skipping all sends');
-    return {
-      started_at: started_at.toISOString(),
-      completed_at: new Date().toISOString(),
-      duration_ms: 0,
-      sent: 0,
-      failed: 0,
-      skipped_no_email: 0,
-    };
-  }
-
-  const resend = new Resend(apiKey);
-  let sent = 0;
+  let drafts = 0;
   let failed = 0;
+  let skippedNoOutlook = 0;
   let skippedNoEmail = 0;
 
   const pending = await prisma.alert.findMany({
@@ -142,18 +134,32 @@ export async function dispatchAlerts(): Promise<DispatchSummary> {
     take: MAX_PER_RUN,
   });
 
+  // Cache lookups for which users have connected Outlook (one Prisma trip
+  // per unique email instead of one per alert).
+  const uniqueEmails = [...new Set(pending.map((a) => a.project.user_email).filter(Boolean))];
+  const tokens = await prisma.oAuthToken.findMany({
+    where: { user_email: { in: uniqueEmails }, provider: 'microsoft' },
+  });
+  const connected = new Set(tokens.map((t) => t.user_email));
+
   for (const alert of pending) {
     if (!alert.project.user_email) {
       skippedNoEmail += 1;
       continue;
     }
+    if (!connected.has(alert.project.user_email)) {
+      // User hasn't connected Outlook yet — leave notified_at NULL so the
+      // alert auto-dispatches once they complete OAuth.
+      skippedNoOutlook += 1;
+      continue;
+    }
+
     const reasoning = alert.doctrine_reasoning as {
       matched_keyword?: string;
       matched_excerpt?: string;
     };
 
     const { subject, text, html } = buildEmail({
-      user_email: alert.project.user_email,
       project_name: alert.project.project_name,
       pierced_auflage: alert.pierced_auflage,
       severity: alert.pierce_severity,
@@ -166,14 +172,15 @@ export async function dispatchAlerts(): Promise<DispatchSummary> {
     });
 
     try {
-      const result = await resend.emails.send({
-        from,
-        to: alert.project.user_email,
+      const messageId = await createOutlookDraft({
+        userEmail: alert.project.user_email,
         subject,
-        text,
-        html,
+        htmlBody: html,
+        // Empty toRecipients — user will add their architect/Bauamt manually before sending.
+        // Or wire a project.default_recipient later.
+        toRecipients: [],
       });
-      if (result.error) throw new Error(JSON.stringify(result.error));
+      if (!messageId) throw new Error('Outlook draft creation returned null');
 
       await prisma.alert.update({
         where: { id: alert.id },
@@ -181,12 +188,13 @@ export async function dispatchAlerts(): Promise<DispatchSummary> {
           notified_at: new Date(),
           drafted_email_subject: subject,
           drafted_email_body: text,
+          outlook_message_id: messageId,
         },
       });
-      sent += 1;
+      drafts += 1;
     } catch (e) {
       failed += 1;
-      console.error(`[dispatch] send failed for alert ${alert.id}:`, e);
+      console.error(`[dispatch] outlook draft failed for alert ${alert.id}:`, e);
     }
   }
 
@@ -195,8 +203,9 @@ export async function dispatchAlerts(): Promise<DispatchSummary> {
     started_at: started_at.toISOString(),
     completed_at: completed_at.toISOString(),
     duration_ms: completed_at.getTime() - started_at.getTime(),
-    sent,
+    drafts_created: drafts,
     failed,
+    skipped_no_outlook: skippedNoOutlook,
     skipped_no_email: skippedNoEmail,
   };
 }
