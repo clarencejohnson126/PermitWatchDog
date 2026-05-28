@@ -4,9 +4,11 @@ import { useRef, useState } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 /**
- * 55-second welcome tutorial in German (Madeleine Weber voice via ElevenLabs
- * with high-emotion settings, background music, 5 chapters with mixed video +
- * still visuals, composed with Hyperframes + GSAP, 1920×1080 30fps).
+ * 46-second welcome tutorial in Hochdeutsch (Monika "Warm & Expressive
+ * Educator" via ElevenLabs v3 with inline emotion tags [ruhig] [ernst]
+ * [überzeugt] [entschlossen], background music, 12 visual cuts in fast
+ * montage style — avg 3.8s per shot, composed with Hyperframes + GSAP,
+ * 1920×1080 30fps).
  *
  * Sits immediately after the hero. Auto-loads but does NOT autoplay — the
  * user clicks the central play button. Inline custom controls so the branded
@@ -42,14 +44,14 @@ export default function WelcomeVideoSection() {
         {/* Eyebrow + headline */}
         <div className="max-w-3xl mb-12">
           <p className="font-body text-xs tracking-[0.25em] uppercase text-blue mb-4">
-            55 Sekunden · Deutsch
+            46 Sekunden · Hochdeutsch
           </p>
           <h2 className="font-serif text-4xl md:text-5xl text-white leading-tight">
             Stille, bis es <span className="text-blue">zählt.</span>
           </h2>
           <p className="font-body text-lg text-zinc-400 mt-6 leading-relaxed">
             Was PermitWatchDog macht — in einem kompakten Tutorial.
-            Echte Stimme, echte Praxis, kein Marketing-Geblubber.
+            Echte Praxis, kein Marketing-Geblubber.
           </p>
         </div>
 
@@ -107,8 +109,8 @@ export default function WelcomeVideoSection() {
 
         {/* Subtle metadata strip */}
         <div className="mt-6 flex items-center justify-between text-xs font-body tracking-widest uppercase text-zinc-500">
-          <span>Dauer · 0:55</span>
-          <span>Madeleine Weber · DE · mit Untertiteln</span>
+          <span>Dauer · 0:46</span>
+          <span>Hochdeutsch · ElevenLabs v3 · mit Untertiteln</span>
         </div>
       </div>
     </section>
