@@ -15,8 +15,13 @@
   --color-zinc-500: #71717A;
   --color-zinc-400: #A1A1AA;
 
+  /* Playfair Display everywhere per Clarence's spec.
+     The Bebas Neue secondary face was a designer suggestion that
+     deviated from the requirement — all three slots now route to
+     Playfair so font-sans / font-serif / font-body classes all
+     resolve to Playfair Display. */
   --font-serif: var(--font-playfair);
-  --font-sans: var(--font-bebas);
+  --font-sans: var(--font-playfair);
   --font-body: var(--font-playfair);
 }
 
