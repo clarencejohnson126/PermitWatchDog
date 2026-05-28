@@ -6,7 +6,8 @@ export default function StartOAuthPage() {
   async function connectOutlook() {
     'use server';
     const state = crypto.randomBytes(16).toString('hex');
-    cookies().set('oauth_state', state, { httpOnly: true, path: '/' });
+    const cookieStore = await cookies();
+    cookieStore.set('oauth_state', state, { httpOnly: true, path: '/' });
 
     const clientId = process.env.MICROSOFT_CLIENT_ID!;
     const redirectUri = process.env.NODE_ENV === 'production' 

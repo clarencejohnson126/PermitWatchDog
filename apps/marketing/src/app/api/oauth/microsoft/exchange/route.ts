@@ -4,7 +4,8 @@ import { cookies } from 'next/headers';
 export async function POST(req: NextRequest) {
   try {
     const { code, state } = await req.json();
-    const storedState = cookies().get('oauth_state')?.value;
+    const cookieStore = await cookies();
+    const storedState = cookieStore.get('oauth_state')?.value;
 
     if (!state || !storedState || state !== storedState) {
       return NextResponse.json({ error: 'CSRF validation failed' }, { status: 400 });
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
     const data = await res.json();
     
     // Clear the state cookie
-    cookies().delete('oauth_state');
+    cookieStore.delete('oauth_state');
 
     return NextResponse.json({
       access_token: data.access_token,
