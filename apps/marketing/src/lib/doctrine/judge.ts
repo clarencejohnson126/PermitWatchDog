@@ -17,8 +17,6 @@
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { z } from 'zod';
 
-const apiKey = process.env.GEMINI_API_KEY;
-
 export const JudgeVerdict = z.object({
   pierces: z.boolean(),
   severity: z.enum(['high', 'medium', 'low']).nullable(),
@@ -92,6 +90,8 @@ export interface JudgeInput {
 }
 
 export async function judgeMatch(input: JudgeInput): Promise<JudgeVerdict> {
+  // Read at call time so .env loaded after import (CLI scripts, tests) still works.
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not configured');
 
   const genAI = new GoogleGenerativeAI(apiKey);
