@@ -20,23 +20,23 @@ export default function CookieBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 bg-zinc-900 border border-zinc-800 p-6 rounded-xl shadow-2xl z-50">
-      <h3 className="text-white font-semibold mb-2">Cookie-Einstellungen</h3>
-      <p className="text-zinc-400 text-sm mb-4">
+    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-[400px] bg-black border border-blue p-6 rounded-lg shadow-[0_0_30px_rgba(22,84,255,0.15)] z-50">
+      <h3 className="text-white font-sans tracking-widest text-xl mb-2">COOKIE-EINSTELLUNGEN</h3>
+      <p className="text-zinc-400 font-body text-sm leading-relaxed mb-6">
         Wir nutzen funktionale Cookies, um die Seite bereitzustellen. Sie können Ihre Einstellungen jederzeit anpassen.
       </p>
       <div className="flex gap-3">
         <button 
           onClick={accept}
-          className="flex-1 bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
+          className="flex-1 bg-blue hover:bg-blue-light text-white px-4 py-3 rounded font-sans tracking-widest transition-colors shadow-[0_0_15px_rgba(22,84,255,0.3)]"
         >
-          Alle Akzeptieren
+          ALLE AKZEPTIEREN
         </button>
         <button 
           onClick={accept}
-          className="flex-1 bg-zinc-800 text-white border border-zinc-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-700 transition-colors"
+          className="flex-1 bg-transparent text-white border border-zinc-700 px-4 py-3 rounded font-sans tracking-widest hover:border-blue hover:text-blue-light transition-colors"
         >
-          Nur Notwendige
+          NUR NOTWENDIGE
         </button>
       </div>
     </div>

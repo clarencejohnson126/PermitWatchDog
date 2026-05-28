@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Playfair_Display, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "../components/CookieBanner";
+import SmoothScroll from "../components/SmoothScroll";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const sourceSerif = Source_Serif_4({ subsets: ["latin"], variable: "--font-source-serif" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const bebas = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-bebas" });
 
 export const metadata: Metadata = {
   title: "PermitWatchDog - KI-gestützte Bauaufsicht für Mannheim",
@@ -17,10 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className={`${inter.variable} ${sourceSerif.variable} bg-[#0A0A0A] text-zinc-100`}>
-      <body className="min-h-screen flex flex-col font-sans selection:bg-blue-500/30">
-        {children}
-        <CookieBanner />
+    <html lang="de" className={`${playfair.variable} ${bebas.variable} bg-black text-white`}>
+      <body className="min-h-screen flex flex-col font-sans selection:bg-blue-light/30">
+        <SmoothScroll>
+          {children}
+          <CookieBanner />
+        </SmoothScroll>
       </body>
     </html>
   );
