@@ -93,7 +93,8 @@ export async function extractBescheid(pdfBytes: Buffer, mimeType = 'application/
 
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
+    // gemini-2.0-flash is deprecated for new accounts → use 2.5-flash.
+    model: 'gemini-2.5-flash',
     systemInstruction: SYSTEM_PROMPT,
     generationConfig: {
       temperature: 0.1,
