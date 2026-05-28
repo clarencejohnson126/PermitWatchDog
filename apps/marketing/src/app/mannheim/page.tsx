@@ -4,6 +4,7 @@ import SectionWrapper from '../../components/SectionWrapper';
 import Image from 'next/image';
 import Link from 'next/link';
 import InteractiveBauantrag from '../../components/InteractiveBauantrag';
+import MannheimQuadrateMap from '../../components/MannheimQuadrateMap';
 
 const roadmap = [
   { phase: 'Phase 1', when: 'Aug 2026', cities: ['Mannheim'], note: 'Pilot-Start · erste zahlende Kunden im Rhein-Neckar-Raum' },
@@ -90,6 +91,9 @@ export default function MannheimPage() {
           </div>
         </div>
       </SectionWrapper>
+
+      {/* 3D Quadrate map — interactive React Three Fiber */}
+      <MannheimQuadrateMap />
 
       {/* Pilot project Q5,18 */}
       <SectionWrapper>
