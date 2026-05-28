@@ -6,7 +6,7 @@ import Link from 'next/link';
 import InteractiveBauantrag from '../../components/InteractiveBauantrag';
 
 const roadmap = [
-  { phase: 'Phase 1', when: 'Aug 2026', cities: ['Mannheim'], note: 'XPRIZE-Einreichung · erste zahlende Kunden' },
+  { phase: 'Phase 1', when: 'Aug 2026', cities: ['Mannheim'], note: 'Pilot-Start · erste zahlende Kunden im Rhein-Neckar-Raum' },
   { phase: 'Phase 2', when: 'Q4 2026', cities: ['Heidelberg', 'Ludwigshafen', 'Stuttgart'], note: 'Rhein-Neckar-Cluster · CMS-Pattern-Skraper' },
   { phase: 'Phase 3', when: '2027', cities: ['Top 50 DACH-Städte'], note: 'Geleitet durch Kundennachfrage' },
   { phase: 'Phase 4', when: '2028', cities: ['Long-Tail · 5 000+ Bauämter'], note: 'WebMCP-Adoption · föderierte Beiträge' },

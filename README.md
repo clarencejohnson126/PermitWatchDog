@@ -2,7 +2,7 @@
 
 > Regulatory intelligence for DACH construction. Watches Bauämter overnight, warns small contractors and Bauträger when changes affect their projects, drafts the required Bauantrags-Addendum.
 
-**Status:** v0.1 — XPRIZE Build-with-Gemini Hackathon submission scaffolding (Rebelz AI). Submission deadline **2026-08-17 1:00 PM PT**.
+**Status:** v0.1 — pilot in Mannheim by Rebelz AI.
 
 ---
 
@@ -64,4 +64,4 @@ Scraper SDK subfolder (`packages/scraper-sdk/`): permissive license (final choic
 
 ---
 
-Built by [Rebelz AI](mailto:clarencejohnson@hotmail.de) for the XPRIZE Build-with-Gemini Hackathon 2026.
+Built by [Rebelz AI](mailto:clarencejohnson@hotmail.de) in Mannheim.
