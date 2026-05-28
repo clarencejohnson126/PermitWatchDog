@@ -11,9 +11,11 @@ import * as cheerio from 'cheerio';
 import { HttpClient } from './http';
 import type { ScrapedRecord, SourceType, ParseConfidence } from './types';
 
-// pdf-parse v2 has a class-based API; v1 had a function. We use v2.
+// pdf-parse v1 — pure JS, runs in Vercel/Lambda. v2 needs @napi-rs/canvas
+// which isn't available in serverless. We require the inner lib path to
+// bypass v1's known test-PDF-on-import bug.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { PDFParse } = require('pdf-parse');
+const pdfParse = require('pdf-parse/lib/pdf-parse.js') as (buf: Buffer) => Promise<{ text: string; numpages: number }>;
 
 const MONTH_DE: Record<string, number> = {
   Januar: 0, Februar: 1, März: 2, April: 3, Mai: 4, Juni: 5,
@@ -86,15 +88,8 @@ export class MannheimScraper {
         return { ...base, content_text: `[Skipped: PDF too large, ${len} bytes]`, parse_confidence: 'failed' } as ScrapedRecord;
       }
       const buf = await this.http.getBuffer(url);
-      let text = '';
-      let parser;
-      try {
-        parser = new PDFParse({ data: buf });
-        const out = await parser.getText();
-        text = out.text;
-      } finally {
-        if (parser?.destroy) await parser.destroy().catch(() => {});
-      }
+      const out = await pdfParse(buf);
+      const text = out.text ?? '';
       const confidence: ParseConfidence = text.length < 100 ? 'low' : 'high';
       return { ...base, content_text: text, parse_confidence: confidence } as ScrapedRecord;
     } catch (e) {
