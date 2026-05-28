@@ -58,6 +58,8 @@ export function matchFilingAgainstProject(
   for (let i = 0; i < auflagen.length; i++) {
     const a = auflagen[i];
     const keywords = keywordsFromAuflage(a);
+    let best: PierceMatch | null = null;
+
     for (const kw of keywords) {
       // Word-boundary match avoids 'mbo' matching 'mannheim' or 'lbo' matching 'global'.
       // For paragraph refs (§ 8a) and DIN/EN refs, use a more lenient pattern.
@@ -74,22 +76,33 @@ export function matchFilingAgainstProject(
       const end = Math.min(haystack.length, idx + m[0].length + 80);
       const excerpt = haystack.slice(start, end).replace(/\s+/g, ' ').trim();
 
-      // Severity heuristic: DIN/EN refs + paragraph refs → high; thematic keyword → medium.
+      // Severity: DIN/EN refs + paragraph refs are precise → high.
+      // Thematic keywords are noisy → medium.
       const severity: PierceMatch['severity'] =
         /^(din|en|iso|vdi|atv)\s/.test(kw) || kw.startsWith('§')
           ? 'high'
           : 'medium';
 
-      matches.push({
+      const candidate: PierceMatch = {
         auflage_index: i,
         auflage_text: a,
         matched_keyword: kw,
         matched_excerpt: excerpt,
         severity,
-      });
-      break; // one match per Auflage is enough — we don't want spammy alerts
+      };
+
+      // Keep the strongest match (high beats medium beats low). One alert per Auflage.
+      if (!best || severityRank(candidate.severity) > severityRank(best.severity)) {
+        best = candidate;
+      }
     }
+
+    if (best) matches.push(best);
   }
 
   return matches;
+}
+
+function severityRank(s: 'high' | 'medium' | 'low'): number {
+  return s === 'high' ? 3 : s === 'medium' ? 2 : 1;
 }
