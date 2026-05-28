@@ -9,6 +9,7 @@ export default function Nav() {
           <span className="text-blue-light">WATCHDOG</span>
         </Link>
         <div className="hidden md:flex items-center gap-8">
+          <Link href="/produkt" className="text-sm font-body text-zinc-400 hover:text-white transition-colors">Produkt</Link>
           <Link href="/doktrin" className="text-sm font-body text-zinc-400 hover:text-white transition-colors">Doktrin</Link>
           <Link href="/preise" className="text-sm font-body text-zinc-400 hover:text-white transition-colors">Preise</Link>
           <Link href="/mannheim" className="text-sm font-body text-zinc-400 hover:text-white transition-colors">Mannheim Pilot</Link>
