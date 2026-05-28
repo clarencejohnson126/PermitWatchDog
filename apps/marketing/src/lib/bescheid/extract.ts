@@ -24,7 +24,9 @@ export const ExtractedBescheid = z.object({
   bescheid_auflagen: z.array(z.string()).default([]),
   abstandsflaeche_nachbarn: z.array(z.string()).default([]),
   parse_confidence: z.enum(['high', 'medium', 'low']).default('medium'),
-  parse_notes: z.string().optional(),
+  // `nullish` accepts both `null` and `undefined` — Gemini returns null for
+  // empty string fields, optional() alone wouldn't catch that.
+  parse_notes: z.string().nullish(),
 });
 
 export type ExtractedBescheid = z.infer<typeof ExtractedBescheid>;
