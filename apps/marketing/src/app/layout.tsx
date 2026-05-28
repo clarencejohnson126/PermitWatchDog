@@ -4,6 +4,7 @@ import "./globals.css";
 import CookieBanner from "../components/CookieBanner";
 import SmoothScroll from "../components/SmoothScroll";
 import Cursor from "../components/Cursor";
+import PageTransition from "../components/PageTransition";
 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 const bebas = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-bebas" });
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col font-sans selection:bg-blue-light/30">
         <SmoothScroll>
           <Cursor />
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
           <CookieBanner />
         </SmoothScroll>
       </body>
