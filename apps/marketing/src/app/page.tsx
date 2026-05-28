@@ -1,7 +1,7 @@
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import HeroSection from '../components/home/HeroSection';
-import WelcomeVideoSection from '../components/home/WelcomeVideoSection';
+import InteractiveWelcomeTour from '../components/home/InteractiveWelcomeTour';
 import HowItWorksSection from '../components/home/HowItWorksSection';
 import DoctrineSection from '../components/home/DoctrineSection';
 import AlertProofSection from '../components/home/AlertProofSection';
@@ -16,7 +16,7 @@ export default function Home() {
       <SplashIntro />
       <Nav />
       <HeroSection />
-      <WelcomeVideoSection />
+      <InteractiveWelcomeTour />
       <HowItWorksSection />
       <DoctrineSection />
       <AlertProofSection />
