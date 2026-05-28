@@ -8,10 +8,12 @@ import AlertProofSection from '../components/home/AlertProofSection';
 import PricingTeaserSection from '../components/home/PricingTeaserSection';
 import CredibilitySection from '../components/home/CredibilitySection';
 import FaqSection from '../components/home/FaqSection';
+import SplashIntro from '../components/SplashIntro';
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col bg-black overflow-x-hidden pt-20">
+      <SplashIntro />
       <Nav />
       <HeroSection />
       <WelcomeVideoSection />
