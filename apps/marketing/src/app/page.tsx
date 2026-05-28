@@ -1,6 +1,7 @@
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import HeroSection from '../components/home/HeroSection';
+import WelcomeVideoSection from '../components/home/WelcomeVideoSection';
 import HowItWorksSection from '../components/home/HowItWorksSection';
 import DoctrineSection from '../components/home/DoctrineSection';
 import AlertProofSection from '../components/home/AlertProofSection';
@@ -13,6 +14,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col bg-black overflow-x-hidden pt-20">
       <Nav />
       <HeroSection />
+      <WelcomeVideoSection />
       <HowItWorksSection />
       <DoctrineSection />
       <AlertProofSection />
