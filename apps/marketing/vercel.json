@@ -5,14 +5,15 @@
   "outputDirectory": ".next",
   "installCommand": "npm install",
   "regions": ["fra1"],
+  "$$cron-note": "Vercel crons run in UTC. Berlin/CEST = UTC+2 (summer), CET = UTC+1 (winter). Values below target Berlin 03:00 / 06:00 in summer (CEST). Adjust for winter (or migrate to GitHub Actions for native TZ support).",
   "crons": [
     {
       "path": "/api/cron/nightly",
-      "schedule": "0 2 * * *"
+      "schedule": "0 1 * * *"
     },
     {
       "path": "/api/cron/dispatch",
-      "schedule": "0 6 * * *"
+      "schedule": "0 4 * * *"
     }
   ]
 }

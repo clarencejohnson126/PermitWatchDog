@@ -59,13 +59,13 @@ function buildEmail(args: {
     '',
     `Quelle:       ${args.filing_title}`,
     `Veröffentl.:  ${publishDate}`,
-    `Original:     ${args.filing_url}`,
+    `Original-URL: ${args.filing_url}`,
     '',
     'Kontext (gefundene Stelle):',
     `  …${args.matched_excerpt}…`,
     '',
     'Was jetzt zu tun ist:',
-    '1. Originalquelle prüfen (Link oben)',
+    `1. Originalquelle prüfen: ${args.filing_url}`,
     '2. Mit dem Architekten klären, ob die Änderung die Auflage tatsächlich verschiebt',
     '3. Bei einer echten Auflage-Piercing: VOB/B § 6 Abs. 2 Anzeige vorbereiten',
     '',
@@ -86,16 +86,17 @@ function buildEmail(args: {
     <table style="width:100%;border-collapse:collapse;font-size:14px;">
       <tr><td style="padding:6px 0;color:#888;width:120px;">Projekt</td><td><strong>${escape(args.project_name)}</strong>${args.bauantrag_nr ? ' · <span style="color:#888;font-family:monospace;">' + escape(args.bauantrag_nr) + '</span>' : ''}</td></tr>
       <tr><td style="padding:6px 0;color:#888;">Auflage</td><td>${escape(args.pierced_auflage)}</td></tr>
-      <tr><td style="padding:6px 0;color:#888;">Quelle</td><td><a href="${escape(args.filing_url)}" style="color:#1654FF;">${escape(args.filing_title)}</a></td></tr>
+      <tr><td style="padding:6px 0;color:#888;">Quelle</td><td>${escape(args.filing_title)}</td></tr>
       <tr><td style="padding:6px 0;color:#888;">Veröffentl.</td><td>${publishDate}</td></tr>
       <tr><td style="padding:6px 0;color:#888;">Treffer</td><td><code style="background:#f0f0f3;padding:2px 6px;border-radius:3px;">${escape(args.matched_keyword)}</code></td></tr>
+      <tr><td style="padding:6px 0;color:#888;vertical-align:top;">Original-URL</td><td><a href="${escape(args.filing_url)}" style="color:#1654FF;word-break:break-all;">${escape(args.filing_url)}</a></td></tr>
     </table>
 
     <blockquote style="margin:24px 0;padding:12px 16px;background:#f0f0f3;border-left:3px solid #ccc;font-style:italic;color:#444;font-size:13px;">…${escape(args.matched_excerpt)}…</blockquote>
 
     <h3 style="font-size:14px;margin:24px 0 8px;">Was jetzt zu tun ist:</h3>
     <ol style="font-size:14px;line-height:1.6;padding-left:20px;color:#444;">
-      <li>Originalquelle prüfen (<a href="${escape(args.filing_url)}" style="color:#1654FF;">Link</a>)</li>
+      <li>Originalquelle prüfen:<br/><a href="${escape(args.filing_url)}" style="color:#1654FF;word-break:break-all;font-size:12px;">${escape(args.filing_url)}</a></li>
       <li>Mit dem Architekten klären, ob die Änderung die Auflage tatsächlich verschiebt</li>
       <li>Bei echter Auflage-Piercing: VOB/B § 6 Abs. 2 Anzeige vorbereiten</li>
     </ol>
