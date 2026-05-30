@@ -75,6 +75,8 @@ export async function POST(req: NextRequest) {
         bescheid_auflagen: extracted.bescheid_auflagen,
         abstandsflaeche_nachbarn: extracted.abstandsflaeche_nachbarn,
         bescheid_date: bescheidDate,
+        city: extracted.city || null,
+        country: (extracted.country || '').toUpperCase() || null,
       },
     });
 

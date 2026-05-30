@@ -47,14 +47,10 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
     where: { lifecycle_stage: { in: ['approved', 'under_construction'] } },
   });
 
-  const filings = await prisma.filing.findMany({
-    where: {
-      publish_date: { gte: cutoff },           // ① recency pre-filter
-      parse_confidence: { in: ['high', 'low'] },
-    },
-    orderBy: { publish_date: 'desc' },
-    take: MAX_FILINGS_PER_RUN,
-  });
+  // Note: filings are pre-loaded per-project below, scoped to that project's
+  // city. Iterating filings city-agnostically would waste Gemini calls
+  // matching e.g. a Mannheim project against San Francisco permits.
+  let totalFilingsScanned = 0;
 
   let candidateMatches = 0;
   let geoRejected = 0;
@@ -75,6 +71,32 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
     // Bestandsschutz timing — use the actual Bescheid date from the PDF if
     // Gemini extracted it; otherwise fall back to upload date.
     const bescheidIssuedAt = project.bescheid_date ?? project.created_at;
+
+    // Scale-critical filter: only consider filings from THE SAME CITY.
+    // This is what makes the system multi-city safe — a Mannheim project
+    // never burns Gemini calls evaluating SF permits.
+    const projectCity = (project.city ?? project.gemarkung ?? '').trim();
+    if (!projectCity) {
+      // Without a city we can't route — skip with a warning. Older projects
+      // without city should be backfilled.
+      console.warn(`[orchestrator] project ${project.id} has no city; skipping`);
+      perProject.push({ project_id: project.id, new_alerts: 0, candidates: 0, pierced: 0 });
+      continue;
+    }
+
+    const filings = await prisma.filing.findMany({
+      where: {
+        publish_date: { gte: cutoff },
+        parse_confidence: { in: ['high', 'low'] },
+        // Case-insensitive city match. We use `contains` so "Mannheim" matches
+        // filings tagged "Mannheim" verbatim, and "san francisco" matches
+        // "San Francisco". Postgres ILIKE via Prisma's `mode: 'insensitive'`.
+        gemeinde: { equals: projectCity, mode: 'insensitive' },
+      },
+      orderBy: { publish_date: 'desc' },
+      take: MAX_FILINGS_PER_RUN,
+    });
+    totalFilingsScanned += filings.length;
 
     // Build the candidate list first so we can parallel-judge in batches.
     type Candidate = { filing: typeof filings[number]; match: PierceMatch };
@@ -196,7 +218,7 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
     completed_at: completed_at.toISOString(),
     duration_ms: completed_at.getTime() - started_at.getTime(),
     projects_scanned: projects.length,
-    filings_scanned: filings.length,
+    filings_scanned: totalFilingsScanned,
     candidate_matches: candidateMatches,
     geo_rejected: geoRejected,
     judged_total: judgedTotal,

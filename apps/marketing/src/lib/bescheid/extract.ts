@@ -22,6 +22,8 @@ export const ExtractedBescheid = z.object({
   aktenzeichen: z.string().default(''),
   lifecycle_stage: z.enum(['approved', 'under_construction', 'completed', 'unknown']).default('approved'),
   bescheid_date: z.string().nullish(), // ISO date 'YYYY-MM-DD' from the PDF; null if Gemini cannot find one
+  city: z.string().default(''),         // the project's city, e.g. 'Mannheim', 'San Francisco'
+  country: z.string().default(''),      // ISO-3166-1 alpha-2 (DE, US, etc.)
   bescheid_auflagen: z.array(z.string()).default([]),
   abstandsflaeche_nachbarn: z.array(z.string()).default([]),
   parse_confidence: z.enum(['high', 'medium', 'low']).default('medium'),
@@ -65,6 +67,14 @@ const RESPONSE_SCHEMA = {
       description: 'Ausstellungsdatum des Bescheids im ISO-Format YYYY-MM-DD. NULL wenn nicht eindeutig im Dokument zu finden.',
       nullable: true,
     },
+    city: {
+      type: SchemaType.STRING,
+      description: 'Stadt des Bauvorhabens (z.B. "Mannheim", "Heidelberg", "San Francisco"). Aus dem Adressfeld extrahieren. Pflichtfeld — wichtig für Routing.',
+    },
+    country: {
+      type: SchemaType.STRING,
+      description: 'ISO-3166-1 alpha-2 Code des Landes ("DE" für Deutschland, "US" für USA, "AT" Österreich, "CH" Schweiz).',
+    },
     bescheid_auflagen: {
       type: SchemaType.ARRAY,
       items: { type: SchemaType.STRING },
@@ -91,6 +101,8 @@ const RESPONSE_SCHEMA = {
     'aktenzeichen',
     'lifecycle_stage',
     'bescheid_date',
+    'city',
+    'country',
     'bescheid_auflagen',
     'abstandsflaeche_nachbarn',
     'parse_confidence',
