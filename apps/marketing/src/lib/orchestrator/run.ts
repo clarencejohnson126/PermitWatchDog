@@ -34,7 +34,10 @@ export interface OrchestratorSummary {
 
 const DEFAULT_LOOKBACK_DAYS = 365;       // recent regulatory activity only
 const MAX_FILINGS_PER_RUN = 200;
-const MAX_PARALLEL_JUDGES = 6;            // mild Gemini rate-limit friendliness
+const MAX_PARALLEL_JUDGES = 6;            // within one project: parallel Gemini calls
+const MAX_PARALLEL_PROJECTS = 10;         // across projects: process in chunks of N
+                                          // total live Gemini concurrency = 10 × 6 = 60
+                                          // stays well under Flash-Lite 1000 RPM cap
 // Source types that almost never describe regulatory changes — skip outright.
 const IGNORED_SOURCE_TYPES = new Set(['vergabe']);
 
@@ -52,6 +55,7 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
   // matching e.g. a Mannheim project against San Francisco permits.
   let totalFilingsScanned = 0;
 
+  // Aggregated counters — populated from per-project results.
   let candidateMatches = 0;
   let geoRejected = 0;
   let judgedTotal = 0;
@@ -63,50 +67,68 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
   let errors = 0;
   const perProject: OrchestratorSummary['per_project'] = [];
 
-  for (const project of projects) {
+  interface ProjectResult {
+    project_id: string;
+    new_alerts: number;
+    candidates: number;
+    pierced: number;
+    filings_seen: number;
+    candidate_matches: number;
+    geo_rejected: number;
+    judged_total: number;
+    judged_pierced: number;
+    judged_noise: number;
+    alerts_created: number;
+    alerts_skipped: number;
+    judge_errors: number;
+    errors: number;
+  }
+
+  // Per-project worker. Each project's work is self-contained; running them
+  // in parallel is safe because the alerts table has a unique (project_id,
+  // filing_id) constraint that prevents accidental duplicates from race.
+  async function processProject(project: typeof projects[number]): Promise<ProjectResult> {
     let projectAlerts = 0;
     let projectCandidates = 0;
     let projectPierced = 0;
+    let pjGeoRejected = 0;
+    let pjJudgedTotal = 0;
+    let pjJudgedPierced = 0;
+    let pjJudgedNoise = 0;
+    let pjAlertsCreated = 0;
+    let pjAlertsSkipped = 0;
+    let pjJudgeErrors = 0;
+    let pjErrors = 0;
 
-    // Bestandsschutz timing — use the actual Bescheid date from the PDF if
-    // Gemini extracted it; otherwise fall back to upload date.
     const bescheidIssuedAt = project.bescheid_date ?? project.created_at;
 
-    // Scale-critical filter: only consider filings from THE SAME CITY.
-    // This is what makes the system multi-city safe — a Mannheim project
-    // never burns Gemini calls evaluating SF permits.
     const projectCity = (project.city ?? project.gemarkung ?? '').trim();
     if (!projectCity) {
-      // Without a city we can't route — skip with a warning. Older projects
-      // without city should be backfilled.
       console.warn(`[orchestrator] project ${project.id} has no city; skipping`);
-      perProject.push({ project_id: project.id, new_alerts: 0, candidates: 0, pierced: 0 });
-      continue;
+      return {
+        project_id: project.id, new_alerts: 0, candidates: 0, pierced: 0,
+        filings_seen: 0, candidate_matches: 0, geo_rejected: 0,
+        judged_total: 0, judged_pierced: 0, judged_noise: 0,
+        alerts_created: 0, alerts_skipped: 0, judge_errors: 0, errors: 0,
+      };
     }
 
     const filings = await prisma.filing.findMany({
       where: {
         publish_date: { gte: cutoff },
         parse_confidence: { in: ['high', 'low'] },
-        // Case-insensitive city match. We use `contains` so "Mannheim" matches
-        // filings tagged "Mannheim" verbatim, and "san francisco" matches
-        // "San Francisco". Postgres ILIKE via Prisma's `mode: 'insensitive'`.
         gemeinde: { equals: projectCity, mode: 'insensitive' },
       },
       orderBy: { publish_date: 'desc' },
       take: MAX_FILINGS_PER_RUN,
     });
-    totalFilingsScanned += filings.length;
 
     // Build the candidate list first so we can parallel-judge in batches.
     type Candidate = { filing: typeof filings[number]; match: PierceMatch };
     const candidates: Candidate[] = [];
 
     for (const filing of filings) {
-      if (IGNORED_SOURCE_TYPES.has(filing.source_type)) continue;     // ② source pre-filter
-      // ③ Bestandsschutz pre-filter: filings that predate the Bescheid
-      // by more than 90 days were already "in effect" when the permit was
-      // granted — they cannot pierce it.
+      if (IGNORED_SOURCE_TYPES.has(filing.source_type)) continue;
       const filingBeforeBescheid =
         filing.publish_date.getTime() < bescheidIssuedAt.getTime() - 90 * 24 * 60 * 60 * 1000;
       if (filingBeforeBescheid) continue;
@@ -115,21 +137,18 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
       try {
         matches = matchFilingAgainstProject(filing.content_text, filing.title, project.bescheid_auflagen);
       } catch (e) {
-        errors += 1;
+        pjErrors += 1;
         console.error(`[orchestrator] match failed (project=${project.id}, filing=${filing.id})`, e);
         continue;
       }
       if (matches.length === 0) continue;
 
-      // ④ Geographic pre-filter — kill Sandhofen-style false-positives BEFORE Gemini.
-      // This was the key precision fix: a filing about Werner-Nagel-Ring in
-      // Mannheim-Sandhofen has zero impact on a project in the Quadrate.
       const geo = geoCheck(
         { address: project.address, gemarkung: project.gemarkung },
         { title: filing.title, content_text: filing.content_text, gemeinde: filing.gemeinde },
       );
       if (geo.decision === 'reject') {
-        geoRejected += 1;
+        pjGeoRejected += 1;
         continue;
       }
 
@@ -138,7 +157,6 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
     }
 
     projectCandidates = candidates.length;
-    candidateMatches += projectCandidates;
 
     // Parallel judge in chunks of MAX_PARALLEL_JUDGES.
     for (let i = 0; i < candidates.length; i += MAX_PARALLEL_JUDGES) {
@@ -161,20 +179,20 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
       for (let j = 0; j < chunk.length; j++) {
         const cand = chunk[j];
         const res = results[j];
-        judgedTotal += 1;
+        pjJudgedTotal += 1;
 
         if (res.status === 'rejected') {
-          judgeErrors += 1;
+          pjJudgeErrors += 1;
           console.error(`[orchestrator] judge failed`, res.reason);
           continue;
         }
 
         const verdict = res.value;
         if (!verdict.pierces) {
-          judgedNoise += 1;
+          pjJudgedNoise += 1;
           continue;
         }
-        judgedPierced += 1;
+        pjJudgedPierced += 1;
         projectPierced += 1;
 
         try {
@@ -196,20 +214,62 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
               },
             },
           });
-          alertsCreated += 1;
+          pjAlertsCreated += 1;
           projectAlerts += 1;
         } catch (e) {
           if (isUniqueViolation(e)) {
-            alertsSkipped += 1;
+            pjAlertsSkipped += 1;
           } else {
-            errors += 1;
+            pjErrors += 1;
             console.error(`[orchestrator] alert insert failed`, e);
           }
         }
       }
     }
 
-    perProject.push({ project_id: project.id, new_alerts: projectAlerts, candidates: projectCandidates, pierced: projectPierced });
+    return {
+      project_id: project.id,
+      new_alerts: projectAlerts,
+      candidates: projectCandidates,
+      pierced: projectPierced,
+      filings_seen: filings.length,
+      candidate_matches: projectCandidates,
+      geo_rejected: pjGeoRejected,
+      judged_total: pjJudgedTotal,
+      judged_pierced: pjJudgedPierced,
+      judged_noise: pjJudgedNoise,
+      alerts_created: pjAlertsCreated,
+      alerts_skipped: pjAlertsSkipped,
+      judge_errors: pjJudgeErrors,
+      errors: pjErrors,
+    };
+  }
+
+  // PARALLELIZE across projects in chunks of MAX_PARALLEL_PROJECTS.
+  // 100 customers × 3 projects → 30 chunks of 10 → ~30 × per-project-latency
+  // instead of 300 × per-project-latency. With 6 parallel judges inside each
+  // project, peak concurrent Gemini calls = 10 × 6 = 60 (safe under most rate limits).
+  for (let i = 0; i < projects.length; i += MAX_PARALLEL_PROJECTS) {
+    const chunk = projects.slice(i, i + MAX_PARALLEL_PROJECTS);
+    const chunkResults = await Promise.all(chunk.map(processProject));
+    for (const r of chunkResults) {
+      totalFilingsScanned += r.filings_seen;
+      candidateMatches += r.candidate_matches;
+      geoRejected += r.geo_rejected;
+      judgedTotal += r.judged_total;
+      judgedPierced += r.judged_pierced;
+      judgedNoise += r.judged_noise;
+      alertsCreated += r.alerts_created;
+      alertsSkipped += r.alerts_skipped;
+      judgeErrors += r.judge_errors;
+      errors += r.errors;
+      perProject.push({
+        project_id: r.project_id,
+        new_alerts: r.new_alerts,
+        candidates: r.candidates,
+        pierced: r.pierced,
+      });
+    }
   }
 
   const completed_at = new Date();
