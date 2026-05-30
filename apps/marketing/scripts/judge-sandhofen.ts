@@ -43,6 +43,7 @@ async function main() {
     auflage_text: abstandAuflage,
     bescheid_issued_at: project.created_at,
     lifecycle_stage: project.lifecycle_stage,
+        country: project.country ?? 'DE',
     filing_title: filing.title,
     filing_content: filing.content_text,
     filing_publish_date: filing.publish_date,

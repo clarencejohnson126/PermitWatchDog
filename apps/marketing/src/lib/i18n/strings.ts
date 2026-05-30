@@ -89,6 +89,76 @@ export const STRINGS = {
   // Generic
   'generic.lang_toggle_to_en': { de: 'English', en: 'English' },
   'generic.lang_toggle_to_de': { de: 'Deutsch', en: 'Deutsch' },
+  'generic.loading': { de: 'Lädt…', en: 'Loading…' },
+
+  // ── How-It-Works section ──
+  'how.eyebrow': { de: 'Wie es funktioniert', en: 'How it works' },
+  'how.title': { de: 'Vier Schritte, jede Nacht.', en: 'Four steps. Every night.' },
+  'how.step1.title': { de: 'Scrapen', en: 'Scrape' },
+  'how.step1.body': { de: 'Wir lesen jeden Eintrag im Bauamt-Portal und im Amtsblatt — automatisiert.', en: 'We read every entry in the city building portal and gazette — automated.' },
+  'how.step2.title': { de: 'Parsen', en: 'Parse' },
+  'how.step2.body': { de: 'PDFs werden in strukturierte Daten zerlegt: Bauantrag-Nr., Auflagen, Paragrafen.', en: 'PDFs are parsed into structured data: permit numbers, conditions, code sections.' },
+  'how.step3.title': { de: 'Abgleichen', en: 'Cross-reference' },
+  'how.step3.body': { de: 'Jedes Filing wird mit Ihrem Bescheid abgeglichen. Vier-Schichten-Doktrin filtert das Rauschen.', en: 'Every filing is matched against your permit. The four-layer doctrine filters the noise.' },
+  'how.step4.title': { de: 'Entwurf', en: 'Draft' },
+  'how.step4.body': { de: 'Bei einem Treffer: fertige E-Mail in Ihrem Outlook um 06:00 — mit Paragrafen und Frist.', en: 'On a real hit: drafted email in your Outlook by 06:00 — with code sections and deadline.' },
+
+  // ── Doctrine section (home teaser) ──
+  'doctrine.eyebrow': { de: 'Die Vier-Schichten-Doktrin', en: 'The Four-Layer Doctrine' },
+  'doctrine.title': { de: 'Warum die meisten Änderungen Sie nicht betreffen.', en: 'Why most changes do not affect you.' },
+  'doctrine.layer1.name': { de: 'Bestandsschutz', en: 'Vested Rights' },
+  'doctrine.layer1.ref': { de: 'Art. 14 GG', en: 'Avco v. South Coast (1976)' },
+  'doctrine.layer2.name': { de: 'Vertrauensschutz', en: 'Equitable Estoppel' },
+  'doctrine.layer2.ref': { de: '§§ 48–49 VwVfG', en: 'Long Beach v. Mansell (1970)' },
+  'doctrine.layer3.name': { de: 'Verhältnismäßigkeit', en: 'Reasonable Necessity' },
+  'doctrine.layer3.ref': { de: 'Art. 20 III GG', en: 'US Const. Amend. XIV' },
+  'doctrine.layer4.name': { de: 'Übergangsregelungen', en: 'Grandfathering' },
+  'doctrine.layer4.ref': { de: 'BauGB / LBO', en: 'Transitional clauses' },
+  'doctrine.cta': { de: 'Doktrin im Detail', en: 'Doctrine in detail' },
+
+  // ── Pricing teaser ──
+  'pricing.eyebrow': { de: 'Preise', en: 'Pricing' },
+  'pricing.title': { de: 'Pro Projekt. Keine Setup-Gebühr.', en: 'Per project. No setup fee.' },
+  'pricing.t0.name': { de: 'Plain Alerts', en: 'Plain Alerts' },
+  'pricing.t0.body': { de: 'Tägliche E-Mail mit gefundenen Änderungen. Ohne Doktrin-Filter. Für Neugierige.', en: 'Daily email with matched changes. No doctrine filter. For the curious.' },
+  'pricing.t1.name': { de: 'Watchdog', en: 'Watchdog' },
+  'pricing.t1.body': { de: 'Doktrin-gefilterte Alerts + Outlook-Drafts mit Paragrafen, Frist und VOB/B-Anhang.', en: 'Doctrine-filtered alerts + Outlook drafts with code sections, deadlines, and contract addendum.' },
+  'pricing.t2.name': { de: 'Bauträger', en: 'Developer' },
+  'pricing.t2.body': { de: 'Bis zu 10 Projekte, prioritäre Doktrin-Beratung, monatlicher Status-Report.', en: 'Up to 10 projects, priority doctrine consulting, monthly status report.' },
+  'pricing.cta_view': { de: 'Alle Preise ansehen', en: 'View all pricing' },
+
+  // ── FAQ teaser ──
+  'faq.title': { de: 'Häufige Fragen', en: 'Frequently asked questions' },
+  'faq.q1': { de: 'Was kostet es?', en: 'How much does it cost?' },
+  'faq.a1': { de: 'Pro Projekt — der Watchdog-Tarif liegt bei 49 € / Monat. Plain Alerts kostenlos für 14 Tage Test.', en: 'Per project — Watchdog is €49/month. Plain Alerts free for a 14-day trial.' },
+  'faq.q2': { de: 'Was passiert mit meinem PDF?', en: 'What happens to my PDF?' },
+  'faq.a2': { de: 'Es wird einmal von Gemini gelesen und nicht gespeichert. Nur die extrahierten Auflagen landen in unserer Datenbank.', en: 'It is read once by Gemini and not stored. Only the extracted conditions go to our database.' },
+  'faq.q3': { de: 'Welche Städte werden überwacht?', en: 'Which cities are monitored?' },
+  'faq.a3': { de: 'Aktuell Mannheim (Pilot) und San Francisco. Nächste DACH-Stadt nach Kundennachfrage.', en: 'Currently Mannheim (pilot) and San Francisco. Next cities driven by customer demand.' },
+
+  // ── Footer ──
+  'footer.tagline': { de: 'KI-gestützte Bauaufsicht für Mannheim & San Francisco.', en: 'AI-powered building-permit watchdog for Mannheim & San Francisco.' },
+  'footer.product': { de: 'Produkt', en: 'Product' },
+  'footer.legal': { de: 'Rechtliches', en: 'Legal' },
+  'footer.company': { de: 'Unternehmen', en: 'Company' },
+  'footer.imprint': { de: 'Impressum', en: 'Imprint' },
+  'footer.privacy': { de: 'Datenschutz', en: 'Privacy' },
+  'footer.about': { de: 'Über uns', en: 'About' },
+  'footer.architects': { de: 'Für Architekten', en: 'For architects' },
+  'footer.bauleiter': { de: 'Für Bauleiter', en: 'For project managers' },
+  'footer.developers': { de: 'Für Bauträger', en: 'For developers' },
+  'footer.copyright': { de: '© {year} PermitWatchDog · Rebelz AI · Mannheim', en: '© {year} PermitWatchDog · Rebelz AI · Mannheim' },
+
+  // ── Pilot page (Mannheim or SF, depending on lang) ──
+  'pilot.eyebrow': { de: 'Pilot-Stadt', en: 'Pilot city' },
+  'pilot.title': {
+    de: 'Mannheim zuerst — der Quadrate-Live-Test.',
+    en: 'San Francisco — the DataSF live integration.',
+  },
+  'pilot.lead': {
+    de: 'Mannheim hat seit April 2024 ein vollständig digitales Bauamt (ViBa). Strukturierte Daten existieren — wir machen sie agentenlesbar.',
+    en: 'San Francisco publishes every building permit on DataSF (Socrata REST API). Structured data already exists — we make it judgement-ready.',
+  },
 } satisfies Record<string, { de: string; en: string }>;
 
 export type StringKey = keyof typeof STRINGS;

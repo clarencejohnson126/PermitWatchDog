@@ -135,7 +135,12 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
 
       let matches: PierceMatch[];
       try {
-        matches = matchFilingAgainstProject(filing.content_text, filing.title, project.bescheid_auflagen);
+        matches = matchFilingAgainstProject(
+          filing.content_text,
+          filing.title,
+          project.bescheid_auflagen,
+          project.country ?? 'DE',
+        );
       } catch (e) {
         pjErrors += 1;
         console.error(`[orchestrator] match failed (project=${project.id}, filing=${filing.id})`, e);
@@ -167,6 +172,7 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
             auflage_text: c.match.auflage_text,
             bescheid_issued_at: bescheidIssuedAt,
             lifecycle_stage: project.lifecycle_stage,
+            country: project.country ?? 'DE',
             filing_title: c.filing.title,
             filing_content: c.filing.content_text,
             filing_publish_date: c.filing.publish_date,
