@@ -5,6 +5,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { Upload, FileText, CheckCircle2, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLang } from '@/lib/i18n/LangContext';
 
 type ExtractedBescheid = {
   project_name: string;
@@ -29,6 +30,7 @@ type Status =
   | { stage: 'error'; message: string };
 
 export default function UploadPage() {
+  const { t } = useLang();
   const [status, setStatus] = useState<Status>({ stage: 'idle' });
   const [email, setEmail] = useState('');
   const [dragOver, setDragOver] = useState(false);
@@ -37,11 +39,11 @@ export default function UploadPage() {
   const upload = useCallback(
     async (file: File) => {
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        setStatus({ stage: 'error', message: 'Bitte zuerst eine gültige E-Mail-Adresse eintragen.' });
+        setStatus({ stage: 'error', message: t('upload.errors.invalid_email') });
         return;
       }
       if (!file.name.toLowerCase().endsWith('.pdf')) {
-        setStatus({ stage: 'error', message: 'Nur PDF-Bescheide werden akzeptiert.' });
+        setStatus({ stage: 'error', message: t('upload.errors.not_pdf') });
         return;
       }
 
@@ -90,20 +92,19 @@ export default function UploadPage() {
 
       <section className="flex-1 max-w-3xl mx-auto px-6 py-16 md:py-24 w-full">
         <p className="font-body text-xs tracking-[0.25em] uppercase text-blue mb-4">
-          Bescheid hochladen
+          {t('upload.eyebrow')}
         </p>
         <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-6">
-          Drei Minuten Setup. <span className="text-blue">Wir lesen den Rest.</span>
+          {t('upload.title_left')} <span className="text-blue">{t('upload.title_right')}</span>
         </h1>
         <p className="font-body text-lg text-zinc-400 leading-relaxed mb-10">
-          Lade Deinen Genehmigungs-Bescheid als PDF hoch. Wir extrahieren jede Auflage automatisch
-          und vergleichen sie ab morgen jede Nacht gegen Bauamt-Änderungen.
+          {t('upload.lead')}
         </p>
 
         {/* Email field */}
         <div className="mb-8">
           <label htmlFor="email" className="block text-xs tracking-[0.25em] uppercase text-zinc-500 mb-3">
-            E-Mail · für Alerts
+            {t('upload.email_label')}
           </label>
           <input
             id="email"
@@ -149,10 +150,10 @@ export default function UploadPage() {
                 />
                 <Upload className="w-12 h-12 text-zinc-500 mx-auto mb-4" />
                 <p className="font-serif text-xl md:text-2xl text-white mb-2">
-                  Bescheid hier ablegen
+                  {t('upload.drop')}
                 </p>
                 <p className="font-body text-sm text-zinc-500">
-                  PDF · max 12 MB · ein einzelner Bescheid pro Upload
+                  {t('upload.drop_hint')}
                 </p>
               </div>
               {status.stage === 'error' && (
@@ -174,11 +175,11 @@ export default function UploadPage() {
             >
               <Loader2 className="w-10 h-10 text-blue mx-auto mb-4 animate-spin" />
               <p className="font-serif text-xl text-white mb-2">
-                {status.stage === 'reading' ? 'Lese PDF…' : 'Extrahiere Auflagen via Gemini…'}
+                {status.stage === 'reading' ? t('upload.reading') : t('upload.extracting')}
               </p>
               <p className="font-body text-sm text-zinc-500">{status.filename}</p>
               <p className="font-body text-xs text-zinc-600 mt-4">
-                Das dauert 10–30 Sekunden. Nicht schließen.
+                {t('upload.wait')}
               </p>
             </motion.div>
           )}
@@ -194,10 +195,9 @@ export default function UploadPage() {
               <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-6 flex items-start gap-4">
                 <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0" />
                 <div>
-                  <p className="font-serif text-xl text-white mb-1">Bescheid eingelesen.</p>
+                  <p className="font-serif text-xl text-white mb-1">{t('upload.done_title')}</p>
                   <p className="font-body text-sm text-zinc-400">
-                    Projekt-ID <code className="text-emerald-300">{status.project_id.slice(0, 8)}</code> aktiv.
-                    Ab Morgen 06:00 wachen wir über jede Auflage.
+                    {t('upload.done_body', { id: status.project_id.slice(0, 8) })}
                   </p>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default function UploadPage() {
                 </p>
 
                 <p className="text-[10px] tracking-[0.3em] uppercase text-blue mb-3">
-                  {status.extracted.bescheid_auflagen.length} Auflagen erkannt
+                  {t('upload.auflagen_count', { n: status.extracted.bescheid_auflagen.length })}
                 </p>
                 <ul className="space-y-2.5">
                   {status.extracted.bescheid_auflagen.map((a, i) => (
@@ -248,7 +248,7 @@ export default function UploadPage() {
                 onClick={() => setStatus({ stage: 'idle' })}
                 className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors"
               >
-                Weiteren Bescheid hochladen <ArrowRight className="w-4 h-4" />
+                {t('upload.upload_another')} <ArrowRight className="w-4 h-4" />
               </button>
             </motion.div>
           )}
@@ -257,8 +257,7 @@ export default function UploadPage() {
         {/* Subtle footer note */}
         <p className="text-xs font-body text-zinc-600 mt-12 leading-relaxed">
           <FileText className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
-          Das PDF wird nur einmalig durch Gemini gelesen und nicht gespeichert. Nur die
-          extrahierten Auflagen + Projekt-Metadaten landen in unserer Datenbank.
+          {t('upload.privacy_note')}
         </p>
       </section>
 
