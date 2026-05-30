@@ -1,21 +1,28 @@
 // City of Palo Alto scraper.
 //
-// Public canonical sources for building-related regulatory activity:
-//   - https://www.cityofpaloalto.org/Departments/Planning-Development-Services
-//   - https://www.cityofpaloalto.org/News/Latest-News   (RSS-ish list)
-//   - https://cityofpaloalto.legistar.com/Calendar.aspx (city council + boards)
-//
-// Equivalent product positioning:
+// Target product positioning:
 //   Bescheid → Building Permit
 //   Auflage → Condition of Approval
 //   Bauleitplanung / B-Plan → Zoning code amendments / Comprehensive Plan
 //   Bauaufsichtliche Anordnung → Code-enforcement order / Ordinance
 //
-// This scraper targets the "Latest News" + "Public Notices" surface, which
-// is the most stable public HTML feed. Legistar is JS-rendered and would
-// need Playwright; we keep that for a follow-up. Same incremental pattern
-// as Mannheim — `since` filter lets nightly runs stay under serverless
-// timeouts.
+// SOURCE STATUS (verified 2026-05-30):
+//   - cityofpaloalto.org → 403/WAF-blocked for headless scraping (Akamai).
+//     Needs server-side Playwright OR an approved-IP allow-list.
+//   - webapi.legistar.com/v1/cityofpaloalto → NOT wired by the city
+//     (returns "LegistarConnectionString setting is not set up").
+//   - cityofpaloalto.legistar.com → JS-rendered Legistar UI, scrapeable
+//     only via Playwright (not Vercel-serverless-friendly).
+//
+// FOLLOW-UPS to identify a reliable feed:
+//   - Granicus (some Palo Alto boards) — agenda RSS at viewthe.city
+//   - OpenGov permit portal (public-portal.opengov.com/...?city=paloalto)
+//   - Direct city RSS at /Home/Components/News/News-1-Archive
+//   - Ask city's IT dept for an approved scraper IP whitelist
+//
+// Architecture is in place — runner iterates both scrapers, geo-filter
+// recognizes Palo Alto neighborhoods, doctrine judge is locale-agnostic.
+// When a reliable feed is identified, only this file changes.
 
 import * as cheerio from 'cheerio';
 import { HttpClient } from './http';
