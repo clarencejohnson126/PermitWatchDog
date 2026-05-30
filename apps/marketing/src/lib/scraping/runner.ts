@@ -3,7 +3,7 @@
 // local backfill CLI.
 
 import { MannheimScraper } from './mannheim';
-import { PaloAltoScraper } from './palo_alto';
+import { SFScraper } from './sf';
 import type { ScrapedRecord } from './types';
 import { prisma } from '../db/prisma';
 
@@ -79,7 +79,7 @@ export async function runScraper(opts: RunnerOptions = {}): Promise<RunSummary> 
   // contributes its records.
   const scrapers = [
     new MannheimScraper(),
-    new PaloAltoScraper(),
+    new SFScraper(),
   ];
 
   let records: ScrapedRecord[] = [];

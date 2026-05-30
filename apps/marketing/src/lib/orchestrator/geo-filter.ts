@@ -57,34 +57,44 @@ const MANNHEIM: DistrictRegistry = {
   ],
 };
 
-const PALO_ALTO: DistrictRegistry = {
-  city: 'palo alto',
+const SAN_FRANCISCO: DistrictRegistry = {
+  city: 'san francisco',
+  // SF's ~36 official neighborhoods + commonly-used alt names. Lower-case.
   districts: [
-    'university south', 'professorville', 'downtown north',
-    'crescent park', 'community center', 'duveneck/st\\.?\\s*francis',
-    'duveneck', 'st. francis',
-    'old palo alto', 'south of midtown', 'midtown',
-    'south of forest', 'evergreen park', 'mayfield',
-    'college terrace', 'stanford research park',
-    'ventura', 'barron park', 'green acres', 'fairmeadow',
-    'palo verde', 'greer park', 'monroe park',
-    'leland manor', 'garland', 'triple el',
-    'eichler', 'stanford', 'east palo alto',
+    'mission', 'mission district', 'castro', 'noe valley', 'bernal heights',
+    'soma', 'south of market', 'south beach', 'mission bay',
+    'financial district', 'fidi', 'embarcadero', 'chinatown', 'north beach',
+    'russian hill', 'nob hill', 'pacific heights', 'pac heights',
+    'marina', 'cow hollow', 'presidio', 'presidio heights',
+    'haight-ashbury', 'the haight', 'cole valley', 'inner sunset',
+    'sunset', 'outer sunset', 'parkside', 'richmond', 'inner richmond',
+    'outer richmond', 'lake', 'sea cliff', 'lone mountain',
+    'hayes valley', 'duboce triangle', 'lower haight', 'fillmore',
+    'western addition', 'japantown',
+    'tenderloin', 'civic center', 'mid-market', 'mid market',
+    'twin peaks', 'glen park', 'diamond heights', 'forest hill',
+    'west portal', 'sunnyside', 'mission terrace',
+    'excelsior', 'portola', 'visitacion valley', 'bayview',
+    'hunters point', 'bay view-hunters point', 'silver terrace',
+    'potrero hill', 'dogpatch', 'showplace square', 'design district',
+    'ingleside', 'oceanview', 'merced heights', 'lakeshore',
+    'treasure island', 'yerba buena',
   ],
   addressTokensToDistrict: [],
   cityWideMarkers: [
     /\bcity\s*-?\s*wide\b/i,
-    /comprehensive\s+plan/i,
-    /title\s+18/i,                       // Zoning code = city-wide
-    /municipal\s+code/i,
-    /general\s+plan/i,
-    /ordinance\s+no\b/i,
-    /ceqa/i,
-    /\bcity\s+of\s+palo\s+alto\s+only\b/i,
+    /\bgeneral\s+plan\b/i,
+    /\bplanning\s+code\b/i,
+    /\bbuilding\s+code\b/i,
+    /\bmunicipal\s+code\b/i,
+    /\bordinance\s+no\b/i,
+    /\bceqa\b/i,
+    /\bdiscretionary\s+review\b/i,
+    /\bsf\s+planning\b/i,
   ],
 };
 
-const REGISTRIES: DistrictRegistry[] = [MANNHEIM, PALO_ALTO];
+const REGISTRIES: DistrictRegistry[] = [MANNHEIM, SAN_FRANCISCO];
 
 export interface GeoCheckResult {
   decision: 'keep' | 'reject';

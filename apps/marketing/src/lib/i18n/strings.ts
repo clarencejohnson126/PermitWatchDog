@@ -11,7 +11,7 @@ export const STRINGS = {
   'nav.product': { de: 'Produkt', en: 'Product' },
   'nav.doctrine': { de: 'Doktrin', en: 'Doctrine' },
   'nav.pricing': { de: 'Preise', en: 'Pricing' },
-  'nav.pilot': { de: 'Mannheim Pilot', en: 'Palo Alto Pilot' },
+  'nav.pilot': { de: 'Mannheim Pilot', en: 'San Francisco Pilot' },
   'nav.login': { de: 'Login', en: 'Login' },
   'nav.dashboard': { de: 'Dashboard', en: 'Dashboard' },
   'nav.cta': { de: 'BESCHEID HOCHLADEN', en: 'UPLOAD PERMIT' },
@@ -24,7 +24,7 @@ export const STRINGS = {
   },
   'hero.subtitle': {
     de: 'Verhindern Sie behördliche Baustopps in Mannheim. Wir überwachen das Amtsblatt und wehren überzogene Auflagen durch automatisierte Verhältnismäßigkeits-Prüfungen ab.',
-    en: 'Avoid city stop-work orders in Palo Alto. We watch every Planning Commission notice and challenge over-broad conditions through automated proportionality review.',
+    en: 'Avoid stop-work orders in San Francisco. We watch every Planning Department filing and challenge over-broad Conditions of Approval through automated proportionality review.',
   },
   'hero.cta_primary': { de: 'Bauvorhaben absichern', en: 'Protect your project' },
   'hero.cta_secondary': { de: 'Doktrin ansehen', en: 'See the doctrine' },
