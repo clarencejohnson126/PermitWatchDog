@@ -1,20 +1,17 @@
 // Per-user dashboard: list projects + alerts.
-// Email-based identification (no full auth yet) — MVP. Use `?email=...` query
-// or set the `pwd_email` cookie via the upload form for persistence.
+// Now properly auth-gated — middleware redirects unauthenticated users
+// to /login, and we read the authenticated email from Supabase.
 
 import { prisma } from '@/lib/db/prisma';
-import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { AlertCircle, CheckCircle2, ExternalLink, FileText, Home, ShieldAlert } from 'lucide-react';
+import { getCurrentUserEmail } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
-
-interface PageProps {
-  searchParams: Promise<{ email?: string }>;
-}
 
 const SEVERITY_LABEL: Record<string, string> = { high: 'HOCH', medium: 'MITTEL', low: 'NIEDRIG' };
 const SEVERITY_COLOR: Record<string, string> = {
@@ -23,12 +20,11 @@ const SEVERITY_COLOR: Record<string, string> = {
   low: 'border-zinc-500/40 bg-zinc-500/10 text-zinc-300',
 };
 
-export default async function DashboardPage({ searchParams }: PageProps) {
-  const sp = await searchParams;
-  const cookieStore = await cookies();
-  const email = (sp.email ?? cookieStore.get('pwd_email')?.value ?? '').toLowerCase().trim();
-
-  if (!email) return <NoEmailState />;
+export default async function DashboardPage() {
+  // Auth-gated by middleware.ts — if we got here, user is signed in.
+  // Belt-and-suspenders: also check here and redirect to /login if missing.
+  const email = await getCurrentUserEmail();
+  if (!email) redirect('/login?next=/dashboard');
 
   const projects = await prisma.project.findMany({
     where: { user_email: email },
@@ -199,44 +195,6 @@ function Pill({ label, tone }: { label: string; tone: 'amber' | 'zinc' | 'blue' 
     <span className={`text-[10px] tracking-[0.2em] uppercase font-mono px-3 py-1.5 rounded-full border ${cls}`}>
       {label}
     </span>
-  );
-}
-
-function NoEmailState() {
-  return (
-    <main className="flex min-h-screen flex-col bg-black pt-20">
-      <Nav />
-      <section className="flex-1 max-w-md mx-auto px-6 py-24 w-full text-center">
-        <Home className="w-10 h-10 text-blue mx-auto mb-4" />
-        <h1 className="font-serif text-3xl text-white mb-3">Dashboard</h1>
-        <p className="text-zinc-400 text-sm mb-8 leading-relaxed">
-          Wir brauchen Ihre E-Mail-Adresse, um Ihre Projekte zu finden. Tragen Sie diese als
-          URL-Parameter ein:
-        </p>
-        <form method="get" className="space-y-3">
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="bauleiter@firma.de"
-            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-lg text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue text-sm"
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue hover:bg-blue-light text-white text-xs tracking-widest uppercase font-bold py-3 rounded"
-          >
-            Projekte anzeigen
-          </button>
-        </form>
-        <p className="text-xs text-zinc-600 mt-6">
-          Noch keinen Bescheid hochgeladen?{' '}
-          <Link href="/upload" className="text-blue hover:underline">
-            Hier starten
-          </Link>
-        </p>
-      </section>
-      <Footer />
-    </main>
   );
 }
 

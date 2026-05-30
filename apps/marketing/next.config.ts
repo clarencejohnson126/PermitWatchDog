@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { withSentryConfig } from '@sentry/nextjs';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -13,4 +14,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Sentry wrapper — events flow via DSN regardless of org/project slugs here.
+// We skip source-map upload (no SENTRY_AUTH_TOKEN at build time) and use the
+// tunnel route so ad-blockers don't drop events.
+export default withSentryConfig(nextConfig, {
+  silent: !process.env.CI,
+  tunnelRoute: '/monitoring',
+});
