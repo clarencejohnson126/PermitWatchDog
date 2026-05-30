@@ -112,6 +112,10 @@ export class MannheimScraper {
     const subpages: { url: string; type: SourceType }[] = [
       { url: 'https://www.mannheim.de/de/wirtschaft-entwickeln/oeffentliche-bekanntmachungen-aktuelle-planverfahren-vergaben/oeffentliche-bekanntmachungen', type: 'bekanntmachung' },
       { url: 'https://www.mannheim.de/de/wirtschaft-entwickeln/oeffentliche-bekanntmachungen-aktuelle-planverfahren-vergaben/vergaben', type: 'vergabe' },
+      // High-signal: B-Plan changes are where Auflage-Piercing actually originates.
+      { url: 'https://www.mannheim.de/de/wirtschaft-entwickeln/oeffentliche-bekanntmachungen-aktuelle-planverfahren-vergaben/aktuelle-planverfahren', type: 'bauleitplanung' },
+      // Bauleitplanung index page itself (parent listing of all current B-Plan procedures).
+      { url: 'https://www.mannheim.de/de/wirtschaft-entwickeln/leitlinien-und-strategien-fuer-die-stadtentwicklung/bauleitplanung', type: 'bauleitplanung' },
     ];
 
     // ── DOM subpages ──

@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { dispatchAlerts } from '@/lib/notifier/dispatch';
+import { sendDailyStatus } from '@/lib/notifier/daily-status';
 import { isAuthorizedCron } from '@/lib/cron-auth';
 
 export const runtime = 'nodejs';
@@ -21,8 +22,13 @@ async function handle(req: NextRequest) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
   try {
-    const summary = await dispatchAlerts();
-    return NextResponse.json({ status: 'ok', summary });
+    // 1. Dispatch any unnotified alerts → Outlook drafts.
+    const alerts = await dispatchAlerts();
+    // 2. Always send a daily status mail per project (proof-of-life,
+    //    even on 0 alerts). Without this the user has no signal that
+    //    the system ran.
+    const status = await sendDailyStatus();
+    return NextResponse.json({ status: 'ok', alerts, daily_status: status });
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     console.error('[cron/dispatch] fatal:', e);

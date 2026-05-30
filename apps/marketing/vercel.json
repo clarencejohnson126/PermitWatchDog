@@ -8,11 +8,11 @@
   "crons": [
     {
       "path": "/api/cron/nightly",
-      "schedule": "0 1 * * *"
+      "schedule": "0 5 * * *"
     },
     {
       "path": "/api/cron/dispatch",
-      "schedule": "0 4 * * *"
+      "schedule": "30 6 * * *"
     }
   ]
 }
