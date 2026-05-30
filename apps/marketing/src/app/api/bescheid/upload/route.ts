@@ -54,6 +54,13 @@ export async function POST(req: NextRequest) {
 
     const extracted = await extractBescheid(bytes);
 
+    // Parse the YYYY-MM-DD bescheid_date Gemini extracted (or null).
+    let bescheidDate: Date | null = null;
+    if (extracted.bescheid_date) {
+      const d = new Date(extracted.bescheid_date);
+      if (!isNaN(d.getTime())) bescheidDate = d;
+    }
+
     const project = await prisma.project.create({
       data: {
         user_email: email,
@@ -67,6 +74,7 @@ export async function POST(req: NextRequest) {
         lifecycle_stage: extracted.lifecycle_stage,
         bescheid_auflagen: extracted.bescheid_auflagen,
         abstandsflaeche_nachbarn: extracted.abstandsflaeche_nachbarn,
+        bescheid_date: bescheidDate,
       },
     });
 

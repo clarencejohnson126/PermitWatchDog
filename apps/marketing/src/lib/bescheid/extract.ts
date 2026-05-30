@@ -21,6 +21,7 @@ export const ExtractedBescheid = z.object({
   bauantrag_nr: z.string().default(''),
   aktenzeichen: z.string().default(''),
   lifecycle_stage: z.enum(['approved', 'under_construction', 'completed', 'unknown']).default('approved'),
+  bescheid_date: z.string().nullish(), // ISO date 'YYYY-MM-DD' from the PDF; null if Gemini cannot find one
   bescheid_auflagen: z.array(z.string()).default([]),
   abstandsflaeche_nachbarn: z.array(z.string()).default([]),
   parse_confidence: z.enum(['high', 'medium', 'low']).default('medium'),
@@ -59,6 +60,11 @@ const RESPONSE_SCHEMA = {
       type: SchemaType.STRING,
       enum: ['approved', 'under_construction', 'completed', 'unknown'],
     },
+    bescheid_date: {
+      type: SchemaType.STRING,
+      description: 'Ausstellungsdatum des Bescheids im ISO-Format YYYY-MM-DD. NULL wenn nicht eindeutig im Dokument zu finden.',
+      nullable: true,
+    },
     bescheid_auflagen: {
       type: SchemaType.ARRAY,
       items: { type: SchemaType.STRING },
@@ -84,6 +90,7 @@ const RESPONSE_SCHEMA = {
     'bauantrag_nr',
     'aktenzeichen',
     'lifecycle_stage',
+    'bescheid_date',
     'bescheid_auflagen',
     'abstandsflaeche_nachbarn',
     'parse_confidence',

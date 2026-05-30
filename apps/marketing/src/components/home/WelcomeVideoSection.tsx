@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { useLang } from '@/lib/i18n/LangContext';
 
 /**
  * 46-second welcome tutorial in Hochdeutsch (Monika "Warm & Expressive
@@ -15,6 +16,7 @@ import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
  * look is preserved (no default Chromium controls).
  */
 export default function WelcomeVideoSection() {
+  const { t } = useLang();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setPlaying] = useState(false);
   const [isMuted, setMuted] = useState(false);
@@ -44,14 +46,13 @@ export default function WelcomeVideoSection() {
         {/* Eyebrow + headline */}
         <div className="max-w-3xl mb-12">
           <p className="font-body text-xs tracking-[0.25em] uppercase text-blue mb-4">
-            44 Sekunden · Hochdeutsch
+            {t('welcome.eyebrow')}
           </p>
           <h2 className="font-serif text-4xl md:text-5xl text-white leading-tight">
-            Auflagen geändert? <span className="text-blue">Wir sagen Bescheid.</span>
+            {t('welcome.title')}
           </h2>
           <p className="font-body text-lg text-zinc-400 mt-6 leading-relaxed">
-            Was PermitWatchDog macht — in einem kompakten Tutorial.
-            Echte Praxis, kein Marketing-Geblubber.
+            {t('welcome.subtitle')}
           </p>
         </div>
 
@@ -109,8 +110,8 @@ export default function WelcomeVideoSection() {
 
         {/* Subtle metadata strip */}
         <div className="mt-6 flex items-center justify-between text-xs font-body tracking-widest uppercase text-zinc-500">
-          <span>Dauer · 0:44</span>
-          <span>Hochdeutsch · ElevenLabs v3 · mit Untertiteln</span>
+          <span>{t('welcome.duration')}</span>
+          <span>{t('welcome.meta')}</span>
         </div>
       </div>
     </section>

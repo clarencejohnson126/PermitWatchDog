@@ -3,8 +3,11 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import MagneticButton from '../MagneticButton';
+import { useLang } from '@/lib/i18n/LangContext';
 
 export default function HeroSection() {
+  const { t } = useLang();
+  const title = t('hero.title');
   return (
     <section className="relative min-h-screen flex items-center pt-24 overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -23,11 +26,11 @@ export default function HeroSection() {
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl">
           <div className="inline-block mb-6 px-4 py-1.5 border border-blue-dark/50 bg-blue/10 backdrop-blur-md rounded-full text-blue-light text-sm font-sans tracking-wide uppercase">
-            Der Bauantrags-Copilot
+            {t('hero.eyebrow')}
           </div>
-          
+
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-8 leading-[1.1] text-white">
-            {"Die erste KI-gestützte Bauaufsicht".split(' ').map((word, i) => (
+            {title.split(' ').map((word, i) => (
               <motion.span
                 key={i}
                 className="inline-block"
@@ -41,7 +44,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="font-sans text-xl md:text-2xl text-zinc-400 mb-12 max-w-2xl leading-relaxed">
-            Verhindern Sie behördliche Baustopps in Mannheim. Wir überwachen das Amtsblatt und wehren überzogene Auflagen durch automatisierte <strong>Verhältnismäßigkeits-Prüfungen</strong> ab.
+            {t('hero.subtitle')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6">
@@ -51,7 +54,7 @@ export default function HeroSection() {
                 className="group relative inline-flex items-center justify-center px-8 py-4 bg-blue text-white font-sans text-lg tracking-wide hover:bg-blue-light transition-colors overflow-hidden"
               >
                 <span className="relative z-10 flex items-center">
-                  Bauvorhaben absichern
+                  {t('hero.cta_primary')}
                   <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -64,7 +67,7 @@ export default function HeroSection() {
                 href="/demo" 
                 className="inline-flex items-center justify-center px-8 py-4 border border-zinc-700 hover:border-white text-zinc-300 hover:text-white font-sans text-lg tracking-wide transition-colors"
               >
-                Doktrin ansehen
+                {t('hero.cta_secondary')}
               </Link>
             </MagneticButton>
           </div>

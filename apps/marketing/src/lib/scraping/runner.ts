@@ -3,6 +3,7 @@
 // local backfill CLI.
 
 import { MannheimScraper } from './mannheim';
+import { PaloAltoScraper } from './palo_alto';
 import type { ScrapedRecord } from './types';
 import { prisma } from '../db/prisma';
 
@@ -73,15 +74,25 @@ async function persistRecord(rec: ScrapedRecord): Promise<'created' | 'updated'>
 export async function runScraper(opts: RunnerOptions = {}): Promise<RunSummary> {
   const started_at = new Date();
   const since = opts.since ?? (await inferSince());
-  const scraper = new MannheimScraper();
+
+  // Run both city scrapers and concatenate. If one throws, the other still
+  // contributes its records.
+  const scrapers = [
+    new MannheimScraper(),
+    new PaloAltoScraper(),
+  ];
 
   let records: ScrapedRecord[] = [];
   let errors = 0;
-  try {
-    records = await scraper.run({ since, maxRecords: opts.maxRecords ?? 200 });
-  } catch (e) {
-    errors += 1;
-    console.error('[runner] scraper threw:', e);
+  const maxRecords = opts.maxRecords ?? 200;
+  for (const s of scrapers) {
+    try {
+      const r = await s.run({ since, maxRecords });
+      records = records.concat(r);
+    } catch (e) {
+      errors += 1;
+      console.error(`[runner] ${s.constructor.name} threw:`, e);
+    }
   }
 
   let newCount = 0;

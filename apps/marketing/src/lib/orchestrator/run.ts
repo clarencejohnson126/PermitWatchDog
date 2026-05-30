@@ -12,6 +12,7 @@
 import { prisma } from '@/lib/db/prisma';
 import { matchFilingAgainstProject, type PierceMatch } from './matcher';
 import { judgeMatch } from '@/lib/doctrine/judge';
+import { geoCheck } from './geo-filter';
 
 export interface OrchestratorSummary {
   started_at: string;
@@ -20,6 +21,7 @@ export interface OrchestratorSummary {
   projects_scanned: number;
   filings_scanned: number;
   candidate_matches: number;
+  geo_rejected: number;
   judged_total: number;
   judged_pierced: number;
   judged_noise: number;
@@ -55,6 +57,7 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
   });
 
   let candidateMatches = 0;
+  let geoRejected = 0;
   let judgedTotal = 0;
   let judgedPierced = 0;
   let judgedNoise = 0;
@@ -69,10 +72,9 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
     let projectCandidates = 0;
     let projectPierced = 0;
 
-    // For Bestandsschutz timing — we approximate "Bescheid issue date" by
-    // project.created_at (upload date). Real Bescheide should have a dedicated
-    // bescheid_date field — TODO once user data shape stabilizes.
-    const bescheidIssuedAt = project.created_at;
+    // Bestandsschutz timing — use the actual Bescheid date from the PDF if
+    // Gemini extracted it; otherwise fall back to upload date.
+    const bescheidIssuedAt = project.bescheid_date ?? project.created_at;
 
     // Build the candidate list first so we can parallel-judge in batches.
     type Candidate = { filing: typeof filings[number]; match: PierceMatch };
@@ -96,6 +98,19 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
         continue;
       }
       if (matches.length === 0) continue;
+
+      // ④ Geographic pre-filter — kill Sandhofen-style false-positives BEFORE Gemini.
+      // This was the key precision fix: a filing about Werner-Nagel-Ring in
+      // Mannheim-Sandhofen has zero impact on a project in the Quadrate.
+      const geo = geoCheck(
+        { address: project.address, gemarkung: project.gemarkung },
+        { title: filing.title, content_text: filing.content_text, gemeinde: filing.gemeinde },
+      );
+      if (geo.decision === 'reject') {
+        geoRejected += 1;
+        continue;
+      }
+
       const strongest = matches.reduce((a, b) => (severityRank(b.severity) > severityRank(a.severity) ? b : a));
       candidates.push({ filing, match: strongest });
     }
@@ -183,6 +198,7 @@ export async function runOrchestrator(opts: { lookbackDays?: number } = {}): Pro
     projects_scanned: projects.length,
     filings_scanned: filings.length,
     candidate_matches: candidateMatches,
+    geo_rejected: geoRejected,
     judged_total: judgedTotal,
     judged_pierced: judgedPierced,
     judged_noise: judgedNoise,
